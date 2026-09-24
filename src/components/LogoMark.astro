@@ -1,0 +1,66 @@
+---
+/**
+ * Emblème : une borie posée sur deux pierres de fondation,
+ * l'une ocre (SCC St-Jory), l'autre lichen (Leymeronie).
+ */
+interface Props {
+  size?: number;
+  class?: string;
+  title?: string;
+}
+
+const { size = 44, class: className, title } = Astro.props;
+---
+
+<svg
+  class:list={['logo-mark', className]}
+  viewBox="0 0 48 48"
+  width={size}
+  height={size}
+  role={title ? 'img' : undefined}
+  aria-hidden={title ? undefined : 'true'}
+  focusable="false"
+>
+  {title && <title>{title}</title>}
+  <path
+    class="logo-mark__dome"
+    d="M9.2 42.6 10.3 31.6H9.5v-1.8C9.7 21 16.2 12 24 7c7.8 5 14.3 14 14.5 22.8v1.8h-.8l1.1 11Z"
+  ></path>
+  <rect class="logo-mark__dome" x="21.2" y="4.4" width="5.6" height="2.9" rx="0.7"></rect>
+  <g class="logo-mark__cut" fill="none" stroke-width="1.15" stroke-linecap="round">
+    <path d="M11.6 37.2Q24 38.6 36.4 37.2"></path>
+    <path d="M11.6 25.4Q24 26.8 36.4 25.4"></path>
+    <path d="M13.4 20.3Q24 21.5 34.6 20.3"></path>
+    <path d="M16 15.8Q24 16.8 32 15.8"></path>
+    <path d="M19.3 11.6Q24 12.3 28.7 11.6"></path>
+  </g>
+  <path class="logo-mark__door" d="M20.6 42.8 20.9 33.2h6.2l.3 9.6Z"></path>
+  <rect class="logo-mark__stone logo-mark__stone--a" x="6" y="43.6" width="17.6" height="3.4" rx="1"></rect>
+  <rect class="logo-mark__stone logo-mark__stone--b" x="24.4" y="43.6" width="17.6" height="3.4" rx="1"></rect>
+</svg>
+
+<style>
+  .logo-mark {
+    flex: none;
+  }
+
+  .logo-mark__dome {
+    fill: var(--logo-ink, var(--ink));
+  }
+
+  .logo-mark__cut {
+    stroke: var(--logo-cut, var(--paper));
+  }
+
+  .logo-mark__door {
+    fill: var(--logo-cut, var(--paper));
+  }
+
+  .logo-mark__stone--a {
+    fill: var(--logo-stone-a, #b07a3f);
+  }
+
+  .logo-mark__stone--b {
+    fill: var(--logo-stone-b, #7d8a5c);
+  }
+</style>

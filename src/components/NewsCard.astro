@@ -1,0 +1,97 @@
+---
+import DryStoneWall from './DryStoneWall.astro';
+import { NEWS_CATEGORIES } from '@/data/actualites';
+import { formatArticleDate } from '@/lib/dates';
+import type { NewsEntry } from '@/lib/news';
+import { seedFromString } from '@/lib/prng';
+import { withBase } from '@/lib/url';
+
+interface Props {
+  entry: NewsEntry;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { entry, headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
+const href = withBase(`/actualites/${entry.id}/`);
+---
+
+<article class="news-card">
+  <DryStoneWall variant="thin" position={(['start', 'center', 'end'] as const)[seedFromString(entry.id) % 3] ?? 'center'} />
+  <div class="news-card__body">
+    <p class="news-card__meta">
+      <span class="tag">{NEWS_CATEGORIES[entry.data.category]}</span>
+      <time datetime={entry.data.date.toISOString().slice(0, 10)}>{formatArticleDate(entry.data.date)}</time>
+    </p>
+    <Heading class="news-card__title">
+      <a href={href}>{entry.data.title}</a>
+    </Heading>
+    <p class="news-card__excerpt">{entry.data.description}</p>
+  </div>
+</article>
+
+<style>
+  .news-card {
+    position: relative;
+    display: grid;
+    height: 100%;
+    background: var(--paper);
+    border: 1px solid var(--stone-300);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+
+  .news-card:hover {
+    border-color: var(--stone-500);
+  }
+
+  .news-card:focus-within {
+    outline: 3px solid var(--blaze-500);
+    outline-offset: 3px;
+  }
+
+  .news-card__body {
+    display: grid;
+    align-content: start;
+    gap: var(--space-xs);
+    padding: var(--space-m);
+  }
+
+  .news-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.8rem;
+    font-size: var(--step--1);
+    color: var(--ink-3);
+  }
+
+  .news-card__title {
+    font-size: var(--step-1);
+    line-height: 1.2;
+  }
+
+  .news-card__title a {
+    text-decoration: none;
+  }
+
+  /* Toute la carte est cliquable, sans imbriquer de liens. */
+  .news-card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .news-card__title a:focus-visible {
+    outline: none;
+  }
+
+  .news-card:hover .news-card__title a {
+    color: var(--ochre-700);
+  }
+
+  .news-card__excerpt {
+    color: var(--ink-2);
+  }
+</style>

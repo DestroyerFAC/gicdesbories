@@ -1,0 +1,271 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CorbelDiagram from '@/components/art/CorbelDiagram.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { site } from '@/config/site';
+
+const habitats = [
+  {
+    title: 'Les bois de chênes',
+    text: 'Chênes pubescents, taillis et fourrés sur les sols maigres du causse : le refuge du chevreuil et du sanglier.',
+  },
+  {
+    title: 'Les pelouses sèches',
+    text: 'Herbe rase, genévriers et buis, affleurements calcaires : le domaine du lièvre et de la perdrix, parsemé de bories.',
+  },
+  {
+    title: 'La vallée de l’Isle',
+    text: 'Prairies, haies et cultures en contrebas : là où les dégâts de gibier se jouent, et où le dialogue avec les agriculteurs compte.',
+  },
+];
+
+// Contenu statique rédigé ici (jamais saisi par un visiteur) : set:html est sans risque.
+const boriesFacts = [
+  { term: 'Construction', detail: 'À pierres sèches, sans mortier ni charpente' },
+  { term: 'Matériau', detail: 'Le calcaire ramassé sur place en épierrant les champs' },
+  { term: 'Époque', detail: 'Pour la plupart, les XVIII<sup>e</sup> et XIX<sup>e</sup> siècles' },
+  { term: 'Usage', detail: 'Abri pour les outils, les bêtes, les récoltes et les hommes' },
+];
+
+const commitments = [
+  'Ne jamais prélever ni déplacer une pierre de borie',
+  'Remettre en place, à l’identique, les pierres tombées des murets le long des lignes',
+  'Dégager ronces et lierre autour des cabanes proches des postes',
+  'Signaler aux mairies toute borie fragilisée ou effondrée',
+];
+
+const asks = [
+  'Ne pas grimper sur les bories ni sur les murets',
+  'Ne rien emporter : chaque pierre a sa place',
+  'Ne pas faire de feu à l’intérieur ou contre les murs',
+  'Respecter les propriétés : la plupart des bories sont sur des terrains privés',
+];
+---
+
+<BaseLayout
+  title="Territoire & bories"
+  description="Saint-Jory-las-Bloux et Corgnac-sur-l’Isle : le territoire du G.I.C. des Bories, ses milieux naturels et ses cabanes en pierre sèche."
+>
+  <PageHeader
+    eyebrow="Territoire & bories"
+    title="Entre causse et vallée de l’Isle"
+    lead="Deux communes voisines du Périgord, des bois de chênes, des pelouses sèches et des cabanes de pierre qui ont donné leur nom au groupement."
+    seed={7}
+  />
+
+  <section class="section" aria-labelledby="communes-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Deux communes</p>
+        <h2 id="communes-title">Le territoire du G.I.C.</h2>
+        <p class="muted">
+          Le groupement chasse sur les terrains que leurs propriétaires lui confient, sur les communes de Saint-Jory-las-Bloux et de
+          Corgnac-sur-l’Isle, en {site.department}.
+        </p>
+      </div>
+      <ul class="communes" role="list">
+        {
+          site.communes.map((commune) => (
+            <li class="commune">
+              <p class="commune__cp">
+                {commune.postalCode} · {site.department}
+              </p>
+              <h3>{commune.name}</h3>
+              <p>{commune.summary}</p>
+              <a class="link-arrow" href={commune.mapUrl} rel="noopener noreferrer external" target="_blank">
+                Voir sur OpenStreetMap{' '}
+                <span class="visually-hidden"> (nouvel onglet)</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--sand" aria-labelledby="milieux-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Paysages</p>
+        <h2 id="milieux-title">Trois milieux, trois façons de chasser</h2>
+      </div>
+      <ol class="numbered" role="list">
+        {
+          habitats.map((habitat) => (
+            <li>
+              <h3>{habitat.title}</h3>
+              <p>{habitat.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="bories" aria-labelledby="bories-title">
+    <div class="container split split--top">
+      <div class="split__text stack">
+        <p class="eyebrow">Les bories</p>
+        <h2 id="bories-title">Des cabanes tenues par leur propre poids</h2>
+        <p class="dropcap">
+          Borie, cabane, cazelle, gariotte : selon les coins du Périgord et du Quercy, on leur donne des noms différents. Sur le causse de Saint-Jory
+          et les coteaux de Corgnac, elles ponctuent les bois et les anciennes parcelles, souvent adossées à un muret.
+        </p>
+        <p>
+          Elles sont nées de l’épierrement : pour cultiver une terre caillouteuse, il fallait en retirer les pierres. Plutôt que de les entasser, les
+          paysans en ont fait des murets et des abris. Sans mortier et sans charpente, chaque cabane tient grâce à la seule technique de
+          l’encorbellement.
+        </p>
+        <p>
+          Le causse de l’Isle, qui s’étend de Saint-Jory-las-Bloux à Savignac-les-Églises, Mayac et Coulaures, est d’ailleurs réputé pour la richesse
+          de son patrimoine en pierre sèche.
+        </p>
+        <dl class="facts-sheet">
+          {
+            boriesFacts.map((fact) => (
+              <div>
+                <dt>{fact.term}</dt>
+                <dd set:html={fact.detail} />
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+      <CorbelDiagram />
+    </div>
+  </section>
+
+  <section class="section section--oak" aria-labelledby="patrimoine-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Patrimoine</p>
+        <h2 id="patrimoine-title">Chasser au milieu d’un patrimoine fragile</h2>
+        <p class="lead">
+          Nos postes et nos lignes longent des murets vieux de deux siècles. Les chasseurs du G.I.C. en sont, de fait, parmi les premiers gardiens.
+        </p>
+      </div>
+      <div class="pledges">
+        <div class="pledge">
+          <h3>Ce à quoi le G.I.C. s’engage</h3>
+          <ul class="check-list check-list--lichen" role="list">
+            {commitments.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+        <div class="pledge">
+          <h3>Ce que nous demandons à tous</h3>
+          <ul class="check-list check-list--blaze" role="list">
+            {asks.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Propriétaires"
+    title="Vous possédez des terres sur le territoire ?"
+    text="Le droit de chasse vous appartient. Vous pouvez le confier au G.I.C., en fixer les conditions, ou le reprendre : parlons-en."
+    primary={{ href: '/contact/?objet=territoire', label: 'Contacter le bureau' }}
+    secondary={{ href: '/chasse/', label: 'Comment nous chassons' }}
+  />
+</BaseLayout>
+
+<style>
+  .communes {
+    display: grid;
+    gap: var(--space-l);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 52em) {
+    .communes {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .commune {
+    display: grid;
+    align-content: start;
+    gap: var(--space-s);
+    padding: var(--space-l);
+    border: 1px solid var(--stone-300);
+    border-radius: var(--radius);
+    background: var(--paper-2);
+    box-shadow: inset 0 -4px 0 var(--stone-300);
+  }
+
+  .commune h3 {
+    font-size: var(--step-3);
+  }
+
+  .commune p {
+    color: var(--ink-2);
+  }
+
+  .commune .link-arrow {
+    justify-self: start;
+  }
+
+  .commune__cp {
+    font-family: var(--font-sc);
+    font-weight: 700;
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    color: var(--ochre-700);
+  }
+
+  .facts-sheet {
+    display: grid;
+    gap: 0;
+    margin: var(--space-s) 0 0;
+    border-top: 1px solid var(--stone-300);
+  }
+
+  .facts-sheet > div {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: var(--space-s);
+    padding-block: 0.65rem;
+    border-bottom: 1px solid var(--stone-300);
+  }
+
+  .facts-sheet dt {
+    font-family: var(--font-sc);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: lowercase;
+    color: var(--ochre-700);
+  }
+
+  .facts-sheet dd {
+    margin: 0;
+  }
+
+  .pledges {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  @media (min-width: 52em) {
+    .pledges {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .pledge {
+    display: grid;
+    gap: var(--space-m);
+    align-content: start;
+    padding: var(--space-l);
+    border: 1px solid rgb(246 241 231 / 0.18);
+    border-radius: var(--radius);
+  }
+
+  .pledge h3 {
+    font-size: var(--step-2);
+  }
+</style>

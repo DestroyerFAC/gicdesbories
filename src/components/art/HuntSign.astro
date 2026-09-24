@@ -1,0 +1,46 @@
+---
+/** Panneau « Chasse en cours » planté au bord d'un chemin. */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<svg class:list={['hunt-sign', className]} viewBox="0 0 240 290" role="img" aria-labelledby="hunt-sign-title" focusable="false">
+  <title id="hunt-sign-title">Panneau triangulaire orange « Chasse en cours » posé en bord de chemin.</title>
+  <ellipse cx="120" cy="276" rx="74" ry="8" fill="#3c2d1e" opacity="0.15"></ellipse>
+  <path d="M113 186h14l2 90h-18Z" fill="#7a5a3a"></path>
+  <path d="M117 186h4l1 90h-5Z" fill="#94704b"></path>
+  <path d="M120 10 232 196H8Z" fill="#e8662c" stroke="#b8441a" stroke-width="4" stroke-linejoin="round"></path>
+  <path d="M120 44 196 180H44Z" fill="#fbf4e6"></path>
+  <rect x="114" y="66" width="12" height="34" rx="6" fill="#23201b"></rect>
+  <circle cx="120" cy="111" r="6.5" fill="#23201b"></circle>
+  <text x="120" y="143" text-anchor="middle" class="hunt-sign__big">Chasse</text>
+  <text x="120" y="167" text-anchor="middle" class="hunt-sign__small">en cours</text>
+</svg>
+
+<style>
+  .hunt-sign {
+    width: 100%;
+    height: auto;
+  }
+
+  .hunt-sign__big,
+  .hunt-sign__small {
+    font-family: var(--font-sc);
+    font-weight: 700;
+    fill: var(--ink);
+    text-transform: lowercase;
+  }
+
+  .hunt-sign__big {
+    font-size: 26px;
+    letter-spacing: 0.03em;
+  }
+
+  .hunt-sign__small {
+    font-size: 19px;
+    letter-spacing: 0.08em;
+  }
+</style>

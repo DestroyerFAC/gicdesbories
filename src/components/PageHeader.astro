@@ -1,0 +1,66 @@
+---
+import BorieVignette from './art/BorieVignette.astro';
+import DryStoneWall from './DryStoneWall.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead?: string;
+  seed: number;
+}
+
+const { eyebrow, title, lead, seed } = Astro.props;
+---
+
+<header class="page-header">
+  <div class="container page-header__inner">
+    <div class="page-header__text">
+      <p class="eyebrow">{eyebrow}</p>
+      <h1>{title}</h1>
+      {lead && <p class="lead">{lead}</p>}
+      <slot />
+    </div>
+    <div class="page-header__art">
+      <BorieVignette seed={seed} />
+    </div>
+  </div>
+  <DryStoneWall variant="band" position={(["start", "center", "end"] as const)[seed % 3] ?? "center"} eager />
+</header>
+
+<style>
+  .page-header {
+    background: var(--paper-2);
+  }
+
+  .page-header__inner {
+    display: grid;
+    gap: var(--space-l);
+    align-items: end;
+    padding-block: var(--space-xl) 0;
+  }
+
+  .page-header__text {
+    display: grid;
+    gap: var(--space-s);
+    padding-bottom: var(--space-l);
+  }
+
+  .page-header__text .lead {
+    max-width: 46ch;
+  }
+
+  .page-header__art {
+    display: none;
+  }
+
+  @media (min-width: 52em) {
+    .page-header__inner {
+      grid-template-columns: minmax(0, 1.5fr) minmax(16rem, 1fr);
+    }
+
+    .page-header__art {
+      display: block;
+      margin-bottom: -4px;
+    }
+  }
+</style>

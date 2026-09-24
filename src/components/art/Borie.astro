@@ -1,0 +1,103 @@
+---
+import { buildBorie, type BorieOptions } from '@/lib/borie';
+
+/** Une borie, à insérer dans un <svg> parent. */
+type Palette = 'day' | 'far' | 'dusk';
+
+type Props = BorieOptions & {
+  palette?: Palette;
+  /** Ombre portée au sol. */
+  shadow?: boolean;
+};
+
+const { palette = 'day', shadow = true, ...options } = Astro.props;
+const g = buildBorie(options);
+
+interface Colors {
+  wall: string;
+  roof: string;
+  ledge: string;
+  cap: string;
+  shade: string;
+  line: string;
+  lineOpacity: number;
+  door: string;
+  lintel: string;
+  lichen: readonly [string, string];
+  ground: string;
+}
+
+const PALETTES: Readonly<Record<Palette, Colors>> = {
+  day: {
+    wall: '#cdb892',
+    roof: '#c3b69b',
+    ledge: '#b39c75',
+    cap: '#b1a283',
+    shade: '#3c2d1e',
+    line: '#6f5c41',
+    lineOpacity: 0.55,
+    door: '#2b231a',
+    lintel: '#bba57d',
+    lichen: ['#8f9a6e', '#e2dcc0'],
+    ground: '#3c2d1e',
+  },
+  far: {
+    wall: '#c2b89c',
+    roof: '#bab39c',
+    ledge: '#aca286',
+    cap: '#aaa189',
+    shade: '#4b4636',
+    line: '#7b7159',
+    lineOpacity: 0.35,
+    door: '#4d4435',
+    lintel: '#b3a88b',
+    lichen: ['#9aa27e', '#d6d2bb'],
+    ground: '#4b4636',
+  },
+  dusk: {
+    wall: '#b9a07a',
+    roof: '#ad9f83',
+    ledge: '#9c8563',
+    cap: '#9d8f73',
+    shade: '#2a1f14',
+    line: '#57462f',
+    lineOpacity: 0.6,
+    door: '#1e1811',
+    lintel: '#a88f69',
+    lichen: ['#7c8660', '#cfc6a6'],
+    ground: '#2a1f14',
+  },
+};
+
+const c = PALETTES[palette];
+---
+
+<g class="borie">
+  {
+    shadow && (
+      <ellipse
+        cx={g.groundShadow.cx}
+        cy={g.groundShadow.cy}
+        rx={g.groundShadow.rx}
+        ry={g.groundShadow.ry}
+        fill={c.ground}
+        opacity="0.16"
+      />
+    )
+  }
+  <path d={g.wall} fill={c.wall}></path>
+  <path d={g.roof} fill={c.roof}></path>
+  <path d={g.ledge} fill={c.ledge}></path>
+  <path d={g.courses} fill="none" stroke={c.line} stroke-opacity={c.lineOpacity} stroke-width="1.1" stroke-linecap="round"></path>
+  <path d={g.joints} fill="none" stroke={c.line} stroke-opacity={c.lineOpacity * 0.8} stroke-width="0.9" stroke-linecap="round"></path>
+  {
+    g.lichen.map((spot, index) => (
+      <ellipse cx={spot.cx} cy={spot.cy} rx={spot.rx} ry={spot.ry} fill={c.lichen[index % 2]} opacity="0.55" />
+    ))
+  }
+  <path d={g.shade} fill={c.shade} opacity="0.17"></path>
+  <path d={g.deepShade} fill={c.shade} opacity="0.13"></path>
+  <path d={g.cap} fill={c.cap}></path>
+  {g.lintel && <path d={g.lintel} fill={c.lintel} />}
+  {g.door && <path d={g.door} fill={c.door} />}
+</g>

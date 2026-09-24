@@ -1,0 +1,135 @@
+---
+import '@fontsource-variable/alegreya/wght.css';
+import '@fontsource-variable/alegreya/wght-italic.css';
+import '@fontsource/alegreya-sans/latin-400.css';
+import '@fontsource/alegreya-sans/latin-400-italic.css';
+import '@fontsource/alegreya-sans/latin-500.css';
+import '@fontsource/alegreya-sans/latin-700.css';
+import '@fontsource/alegreya-sans-sc/latin-500.css';
+import '@fontsource/alegreya-sans-sc/latin-700.css';
+import '@/styles/global.css';
+
+import SiteFooter from '@/components/SiteFooter.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import { site } from '@/config/site';
+import { withBase } from '@/lib/url';
+
+export interface Props {
+  title: string;
+  description?: string;
+  /** Titre court utilisé sur la page d'accueil (sans suffixe). */
+  bareTitle?: boolean;
+  type?: 'website' | 'article';
+  publishedTime?: Date;
+  noindex?: boolean;
+}
+
+const { title, description = site.description, bareTitle = false, type = 'website', publishedTime, noindex = false } = Astro.props;
+
+const fullTitle = bareTitle ? title : `${title} · ${site.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(withBase('/og-image.png'), Astro.site).href;
+
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsOrganization',
+  name: site.acronymExpanded,
+  alternateName: site.name,
+  sport: 'Chasse',
+  foundingDate: String(site.foundedYear),
+  url: new URL(withBase('/'), Astro.site).href,
+  logo: new URL(withBase('/favicon.svg'), Astro.site).href,
+  email: site.contact.email,
+  areaServed: site.communes.map((commune) => ({
+    '@type': 'City',
+    name: commune.name,
+    address: { '@type': 'PostalAddress', postalCode: commune.postalCode, addressRegion: site.department, addressCountry: 'FR' },
+  })),
+};
+// « < » échappé : une valeur de configuration ne peut jamais fermer la balise <script>.
+const jsonLd = JSON.stringify(organization).replace(/</g, '\\u003c');
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#f6f1e7" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <link rel="icon" href={withBase('/favicon-32.png')} sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
+    <link rel="manifest" href={withBase('/site.webmanifest')} />
+    <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
+    <link rel="alternate" type="text/calendar" title="Agenda du G.I.C. des Bories" href={withBase('/agenda.ics')} />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content={site.acronymExpanded} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Bories en pierre sèche sur le causse, emblème du G.I.C. des Bories" />
+    {publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={jsonLd} />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+    {
+      site.preview.enabled && (
+        <aside class="preview-banner" aria-label="Site en cours de mise en service">
+          <p class="container">{site.preview.message}</p>
+        </aside>
+      )
+    }
+    <SiteHeader />
+    <main id="contenu" tabindex="-1">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    left: var(--gutter);
+    top: -4rem;
+    z-index: 100;
+    padding: 0.7rem 1rem;
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 700;
+    border-radius: var(--radius);
+    text-decoration: none;
+  }
+
+  .skip-link:focus {
+    top: 0.75rem;
+    color: var(--paper);
+  }
+
+  .preview-banner {
+    background: var(--stone-300);
+    color: var(--ink);
+    font-size: var(--step--1);
+    line-height: 1.4;
+    padding-block: 0.45rem;
+    text-align: center;
+  }
+
+  main:focus {
+    outline: none;
+  }
+</style>

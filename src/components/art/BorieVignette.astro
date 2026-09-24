@@ -1,0 +1,99 @@
+---
+import Borie from './Borie.astro';
+import { buildDryStoneWall } from '@/lib/drystone';
+import { juniper, oakTree, ridge } from '@/lib/landscape';
+
+/**
+ * Vignette : une borie sur son tertre. La graine choisit la silhouette,
+ * la composition (chêne, seconde cabane, muret) et le sens de lecture :
+ * aucune borie du site n'est tout à fait la même.
+ */
+interface Props {
+  seed: number;
+  class?: string;
+  /** Texte alternatif ; absent = illustration décorative. */
+  label?: string;
+}
+
+const { seed, class: className, label } = Astro.props;
+const W = 360;
+const H = 260;
+const knoll = ridge({ width: W, baseY: 214, amplitude: 10, bottom: H, seed: seed + 100, tilt: -14 });
+const back = ridge({ width: W, baseY: 176, amplitude: 12, bottom: H, seed: seed + 200 });
+
+const silhouettes = [
+  { w: 124, h: 150, bulge: 1.45, wall: 0.42 },
+  { w: 112, h: 162, bulge: 1.25, wall: 0.36 },
+  { w: 136, h: 142, bulge: 1.7, wall: 0.46 },
+] as const;
+const shape = silhouettes[seed % silhouettes.length] ?? silhouettes[0];
+const composition = Math.floor(seed / 3) % 3;
+const mirrored = seed % 2 === 1;
+
+const tree = composition !== 2 ? oakTree(300, knoll.yAt(300) + 4, 44, seed + 5) : null;
+const flames = (composition === 1 ? [{ x: 128, h: 46 }] : [{ x: 88, h: 58 }, { x: 110, h: 38 }]).map((f, i) =>
+  juniper(f.x, knoll.yAt(f.x) + 6, f.h, seed + 9 + i),
+);
+const muret = composition === 2 ? buildDryStoneWall({ width: 380, height: 14, seed: seed + 3, tones: 3 }) : null;
+const muretStones = ['#cdb993', '#c2ad85', '#d8c9aa'];
+const transform = mirrored ? `translate(${W} 0) scale(-1 1)` : undefined;
+---
+
+<svg
+  class:list={['vignette', className]}
+  viewBox={`0 0 ${W} ${H}`}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  focusable="false"
+>
+  <g transform={transform}>
+    <circle cx="92" cy="96" r="34" fill="#f1dcb2"></circle>
+    <path d={back.d} fill="#c9c9aa"></path>
+    {
+      composition === 1 && (
+        <Borie cx={62} baseY={back.yAt(62) + 10} width={40} height={50} seed={seed + 31} palette="far" detail={0.35} shadow={false} />
+      )
+    }
+    <path d={knoll.d} fill="#d6c59f"></path>
+    {
+      tree && (
+        <g>
+          <path d={tree.trunk} fill="#4a3a28" />
+          <path d={tree.crown} fill="#6f7b55" />
+          <path d={tree.shadow} fill="#5a6645" opacity="0.7" />
+        </g>
+      )
+    }
+    {flames.map((d, i) => <path d={d} fill={i === 0 ? '#4e5b3c' : '#5a6846'} />)}
+    <Borie
+      cx={196}
+      baseY={knoll.yAt(196) + 20}
+      width={shape.w}
+      height={shape.h}
+      bulge={shape.bulge}
+      wallRatio={shape.wall}
+      seed={seed}
+      detail={0.85}
+      doorOffset={((seed % 5) - 2) * 0.05}
+    />
+    {
+      muret && (
+        <g transform={`translate(-10 ${H - 22})`}>
+          <rect y={muret.height * 0.25} width={muret.width} height={muret.height * 0.75} fill="#7a6a50" />
+          {muret.layers.map((layer) => (
+            <path d={layer.d} fill={muretStones[layer.tone]} />
+          ))}
+        </g>
+      )
+    }
+  </g>
+</svg>
+
+<style>
+  .vignette {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>

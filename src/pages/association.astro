@@ -1,0 +1,334 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import FusionDiagram from '@/components/FusionDiagram.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { site } from '@/config/site';
+
+const [scc, leymeronie] = site.founders;
+
+const reasons = [
+  {
+    title: 'Plus de sécurité',
+    text: 'Une seule organisation des battues, les mêmes consignes partout, des secteurs signalés de la même manière.',
+  },
+  {
+    title: 'Une gestion à la bonne échelle',
+    text: 'Chevreuils et sangliers ignorent les limites entre sociétés. Le plan de chasse se pense désormais sur un territoire cohérent.',
+  },
+  {
+    title: 'Un seul interlocuteur',
+    text: 'Propriétaires, agriculteurs, mairies, promeneurs : une adresse, un bureau, des réponses.',
+  },
+  {
+    title: 'Des moyens mis en commun',
+    text: 'Matériel, miradors, panneaux, entretien des lignes de tir et des chemins : on partage plutôt que de doubler.',
+  },
+];
+
+const steps = [
+  {
+    when: 'Hier',
+    title: 'Deux sociétés voisines',
+    text: `La ${scc.name} à ${scc.home}, la ${leymeronie.name} à ${leymeronie.home}. Chacune gère son territoire, ses battues, ses adhérents.`,
+  },
+  {
+    when: 'Le rapprochement',
+    title: 'Un projet commun',
+    text: 'Les deux bureaux travaillent ensemble : périmètre du territoire, statuts, règlement intérieur, organisation des battues.',
+  },
+  {
+    when: 'La décision',
+    title: 'Le vote des adhérents',
+    text: 'Chaque société consulte ses membres en assemblée générale : la fusion est une décision des chasseurs eux-mêmes.',
+  },
+  {
+    when: String(site.foundedYear),
+    title: 'Naissance du G.I.C. des Bories',
+    text: 'Statuts déposés, premier bureau élu, droits de chasse des deux sociétés regroupés au sein d’une seule association.',
+  },
+  {
+    when: `Saison ${site.firstSeason}`,
+    title: 'Première saison commune',
+    text: 'Une seule carte de chasse, un calendrier de battues unique, publié sur ce site et abonnable depuis un téléphone.',
+  },
+];
+
+const changes = [
+  'Une seule adhésion, valable sur l’ensemble du territoire',
+  'Un seul bureau, où les deux anciennes sociétés sont représentées',
+  'Un calendrier de battues commun, publié en ligne',
+  'Un interlocuteur unique pour propriétaires, agriculteurs et mairies',
+];
+
+const constants = [
+  'Les propriétaires restent maîtres de leur droit de chasse',
+  'L’attachement à chacune des deux communes et à leurs habitants',
+  'L’entretien des chemins, des murets et des lignes de tir',
+  'La convivialité du rond du matin et du repas de chasse',
+];
+
+const governance = [
+  {
+    title: 'L’assemblée générale',
+    text: 'Tous les adhérents, une fois par an : bilan de la saison, comptes, vote des tarifs, du calendrier et des grandes orientations.',
+  },
+  {
+    title: 'Le bureau',
+    text: 'Présidence, vice-présidence, trésorerie, secrétariat. Il organise la saison, représente le G.I.C. et répond aux demandes.',
+  },
+  {
+    title: 'Le règlement intérieur',
+    text: 'Sécurité, organisation des battues, invitations, entretien du territoire : les règles communes, remises à chaque adhérent.',
+  },
+];
+---
+
+<BaseLayout
+  title="Le G.I.C."
+  description={`Histoire, raisons et fonctionnement du ${site.acronymExpanded}, né de l’union de la ${scc.name} et de la ${leymeronie.name}.`}
+>
+  <PageHeader
+    eyebrow="Le G.I.C."
+    title="Un groupement né de deux sociétés voisines"
+    lead={`Depuis ${site.foundedYear}, la ${scc.name} et la ${leymeronie.name} ne font plus qu’une. Comment, pourquoi, et comment fonctionne le groupement.`}
+    seed={2}
+  />
+
+  <section class="section" aria-labelledby="fondateurs-title">
+    <div class="container split split--top">
+      <div class="split__text stack">
+        <p class="eyebrow">Les fondateurs</p>
+        <h2 id="fondateurs-title">Deux histoires, un même territoire</h2>
+        <p><strong>{scc.name}.</strong> {scc.summary}</p>
+        <p><strong>{leymeronie.name}.</strong> {leymeronie.summary}</p>
+        <p>
+          Les deux territoires se touchaient, le gibier passait de l’un à l’autre et les chasseurs se retrouvaient souvent aux mêmes tables. Les réunir
+          allait de soi.
+        </p>
+      </div>
+      <FusionDiagram />
+    </div>
+  </section>
+
+  <section class="section section--sand" aria-labelledby="pourquoi-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Pourquoi</p>
+        <h2 id="pourquoi-title">Ce que la fusion apporte</h2>
+      </div>
+      <ol class="numbered" role="list">
+        {
+          reasons.map((reason) => (
+            <li>
+              <h3>{reason.title}</h3>
+              <p>{reason.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="etapes-title">
+    <div class="container split split--top">
+      <div class="split__text stack">
+        <p class="eyebrow">Les étapes</p>
+        <h2 id="etapes-title">De deux sociétés à un groupement</h2>
+        <p class="muted">Une fusion ne se décrète pas : elle se prépare, se vote, puis se vit sur le terrain.</p>
+      </div>
+      <ol class="timeline" role="list">
+        {
+          steps.map((step) => (
+            <li class="timeline__step">
+              <span class="timeline__when">{step.when}</span>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--oak" aria-labelledby="change-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Concrètement</p>
+        <h2 id="change-title">Ce qui change, ce qui reste</h2>
+      </div>
+      <div class="compare">
+        <div class="compare__col">
+          <h3>Ce qui change</h3>
+          <ul class="check-list check-list--blaze" role="list">
+            {changes.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+        <div class="compare__col">
+          <h3>Ce qui ne change pas</h3>
+          <ul class="check-list check-list--lichen" role="list">
+            {constants.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="gouvernance-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Fonctionnement</p>
+        <h2 id="gouvernance-title">Qui décide, et comment</h2>
+        <p class="muted">{site.legal.status}. Chaque adhérent a voix au chapitre.</p>
+      </div>
+      <ul class="grid-auto" role="list">
+        {
+          governance.map((item) => (
+            <li class="card">
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      {
+        site.bureau.length > 0 && (
+          <div class="bureau">
+            <h3>Le bureau</h3>
+            <dl class="bureau__list">
+              {site.bureau.map((member) => (
+                <div>
+                  <dt>{member.role}</dt>
+                  <dd>
+                    {member.name}
+                    {member.origin && (
+                      <span class="muted"> · issu·e de la {site.founders.find((f) => f.id === member.origin)?.shortName}</span>
+                    )}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Une question ?"
+    title="Parlons-en"
+    text="Adhésion, terrain à confier, dégâts de gibier ou simple curiosité : le bureau vous répond."
+    primary={{ href: '/contact/', label: 'Écrire au bureau' }}
+    secondary={{ href: '/adherer/', label: 'Adhérer' }}
+  />
+</BaseLayout>
+
+<style>
+  .timeline {
+    position: relative;
+    display: grid;
+    gap: var(--space-l);
+    margin: 0;
+    padding: 0 0 0 2.2rem;
+    list-style: none;
+  }
+
+  /* Le fil de la frise : une ligne de pierres. */
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.55rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 2px;
+    background: repeating-linear-gradient(to bottom, var(--stone-400) 0 10px, transparent 10px 15px);
+  }
+
+  .timeline__step {
+    position: relative;
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .timeline__step::before {
+    content: '';
+    position: absolute;
+    left: -2.2rem;
+    top: 0.25rem;
+    width: 1.15rem;
+    height: 0.8rem;
+    border-radius: 45% 55% 40% 50% / 55% 45% 55% 45%;
+    background: var(--stone-400);
+    box-shadow: 0 0 0 4px var(--paper), inset 0 -2px 0 rgb(0 0 0 / 0.15);
+  }
+
+  .timeline__step:last-child::before {
+    background: var(--blaze-500);
+  }
+
+  .timeline__when {
+    font-family: var(--font-sc);
+    font-weight: 700;
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    color: var(--ochre-700);
+  }
+
+  .timeline__step p {
+    color: var(--ink-2);
+    max-width: 52ch;
+  }
+
+  .compare {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .compare__col {
+    display: grid;
+    gap: var(--space-m);
+    align-content: start;
+    padding: var(--space-l);
+    border: 1px solid rgb(246 241 231 / 0.18);
+    border-radius: var(--radius);
+  }
+
+  .compare__col h3 {
+    font-size: var(--step-2);
+  }
+
+  @media (min-width: 52em) {
+    .compare {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .bureau {
+    margin-top: var(--space-xl);
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .bureau__list {
+    display: grid;
+    gap: var(--space-s) var(--space-l);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    margin: 0;
+  }
+
+  .bureau__list dt {
+    font-family: var(--font-sc);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: lowercase;
+    color: var(--ochre-700);
+  }
+
+  .bureau__list dd {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+  }
+</style>

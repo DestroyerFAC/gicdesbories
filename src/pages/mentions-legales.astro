@@ -1,0 +1,57 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { site } from '@/config/site';
+---
+
+<BaseLayout title="Mentions légales" description={`Mentions légales et politique de confidentialité du site du ${site.acronymExpanded}.`}>
+  <div class="section">
+    <div class="container--narrow prose">
+      <p class="eyebrow">Informations légales</p>
+      <h1>Mentions légales</h1>
+
+      <h2>Éditeur du site</h2>
+      <p>
+        <strong>{site.acronymExpanded}</strong> ({site.name})<br />
+        {site.legal.status}.<br />
+        {site.legal.rna && <>Numéro RNA : {site.legal.rna}<br /></>}
+        {site.contact.postalAddress && <>{site.contact.postalAddress.join(', ')}<br /></>}
+        Contact : <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+      </p>
+      <p>Directeur ou directrice de la publication : {site.legal.publicationDirector}.</p>
+
+      <h2>Hébergement</h2>
+      <p>
+        {site.legal.host.name}<br />
+        {site.legal.host.address}<br />
+        <a href={site.legal.host.url} rel="noopener noreferrer external">{site.legal.host.url}</a>
+      </p>
+
+      <h2>Données personnelles</h2>
+      <p>
+        Ce site ne dépose <strong>aucun cookie</strong>, n’utilise <strong>aucun outil de mesure d’audience</strong> et ne charge aucune ressource
+        depuis un service tiers : les polices de caractères sont hébergées avec le site.
+      </p>
+      <p>
+        Le formulaire de contact ne transmet rien à un serveur : il prépare un e-mail dans votre propre messagerie, que vous choisissez d’envoyer
+        ou non. Les messages reçus par le bureau ne servent qu’à vous répondre et ne sont jamais cédés à des tiers. Conformément au RGPD, vous
+        pouvez demander l’accès, la rectification ou la suppression de vos données en écrivant à{' '}
+        <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>.
+      </p>
+
+      <h2>Propriété intellectuelle</h2>
+      <p>
+        Les textes et illustrations de ce site (bories, paysages, murets, emblème) sont des créations originales réalisées pour le G.I.C. des
+        Bories. Toute reproduction nécessite l’accord de l’association.
+      </p>
+      <p>
+        Polices Alegreya et Alegreya Sans de Juan Pablo del Peral (Huerta Tipográfica), sous licence SIL Open Font License 1.1.
+      </p>
+
+      <h2>Liens externes</h2>
+      <p>
+        Les liens vers d’autres sites (Fédération des chasseurs, préfecture, OpenStreetMap…) sont fournis à titre d’information ; le G.I.C. n’est
+        pas responsable de leur contenu.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

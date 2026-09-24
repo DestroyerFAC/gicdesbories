@@ -1,0 +1,478 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HeroLandscape from '@/components/art/HeroLandscape.astro';
+import BorieVignette from '@/components/art/BorieVignette.astro';
+import DryStoneWall from '@/components/DryStoneWall.astro';
+import EventRow from '@/components/EventRow.astro';
+import FusionDiagram from '@/components/FusionDiagram.astro';
+import NewsCard from '@/components/NewsCard.astro';
+import { site } from '@/config/site';
+import { agenda } from '@/data/agenda';
+import { upcomingEvents } from '@/lib/agenda';
+import { toIsoDate } from '@/lib/dates';
+import { getPublishedNews } from '@/lib/news';
+import { withBase } from '@/lib/url';
+
+const HOME_EVENTS = 3;
+// Calculé au build, puis recalculé dans le navigateur (script agenda-live)
+// pour que les dates passées disparaissent même sans nouveau déploiement.
+const upcoming = upcomingEvents(agenda, toIsoDate(new Date()));
+const news = (await getPublishedNews()).slice(0, 3);
+
+const audiences = [
+  {
+    title: 'Vous chassez',
+    text: 'Une seule carte pour tout le territoire, un calendrier de battues commun, des consignes identiques partout.',
+    links: [
+      { href: '/adherer/', label: 'Adhérer au G.I.C.' },
+      { href: '/chasse/', label: 'Modes de chasse et sécurité' },
+    ],
+  },
+  {
+    title: 'Vous êtes propriétaire ou agriculteur',
+    text: 'Le droit de chasse vous appartient : le G.I.C. ne chasse que sur les terres qui lui sont confiées. Un seul interlocuteur pour les dégâts de gibier.',
+    links: [
+      { href: '/contact/?objet=territoire', label: 'Confier un terrain' },
+      { href: '/contact/?objet=degats', label: 'Signaler des dégâts' },
+    ],
+  },
+  {
+    title: 'Vous vous promenez',
+    text: 'Les chemins restent à tous. Les battues sont annoncées ici et signalées sur le terrain par des panneaux « Chasse en cours ».',
+    links: [
+      { href: '/promeneurs/', label: 'Les bons réflexes' },
+      { href: '/agenda/?filtre=battue', label: 'Dates des battues' },
+    ],
+  },
+] as const;
+---
+
+<BaseLayout title={`${site.name} · Chasse à Saint-Jory-las-Bloux et Corgnac-sur-l’Isle`} bareTitle>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero__text">
+      <p class="eyebrow">Saint-Jory-las-Bloux · Corgnac-sur-l’Isle · {site.department}</p>
+      <h1 id="hero-title">
+        <span class="hero__small">Groupement Intercommunal de Chasse</span>
+        des Bories
+      </h1>
+      <p class="hero__lead">
+        Deux sociétés, un seul territoire. Depuis {site.foundedYear}, la <strong class="nowrap">{site.founders[0].name}</strong> et la{' '}
+        <strong class="nowrap">{site.founders[1].name}</strong> chassent, entretiennent et partagent ensemble le causse et les bois de nos deux communes.
+      </p>
+      <div class="hero__actions">
+        <a class="btn" href="#fusion">Comprendre la fusion</a>
+        <a class="btn btn--stone" href={withBase('/promeneurs/')}>
+          <span class="dot-blaze" aria-hidden="true"></span>
+          Promeneurs : jours de battue
+        </a>
+      </div>
+    </div>
+    <div class="hero__art">
+      <div class="hero__scene"><HeroLandscape /></div>
+      <DryStoneWall variant="hero" eager />
+    </div>
+  </section>
+
+  <section class="facts" aria-label="Le G.I.C. en quelques chiffres">
+    <div class="container">
+      <dl class="facts__list">
+        <div>
+          <dt>communes</dt>
+          <dd>2</dd>
+        </div>
+        <div>
+          <dt>sociétés fondatrices</dt>
+          <dd>2</dd>
+        </div>
+        <div>
+          <dt>groupement</dt>
+          <dd>1</dd>
+        </div>
+        <div>
+          <dt>première saison commune</dt>
+          <dd class="facts__season">{site.firstSeason}</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="fusion" class="section" aria-labelledby="fusion-title">
+    <div class="container split">
+      <div class="split__text stack">
+        <p class="eyebrow">La fusion, en clair</p>
+        <h2 id="fusion-title">Deux sociétés voisines, une même voûte</h2>
+        <p class="dropcap">
+          Longtemps, la <strong>{site.founders[0].name}</strong> a organisé la chasse sur Saint-Jory-las-Bloux ; la{' '}
+          <strong>{site.founders[1].name}</strong> sur le secteur de Leymeronie, à Corgnac-sur-l’Isle. Leurs territoires se touchaient, le gibier
+          passait de l’un à l’autre, les chasseurs se connaissaient tous.
+        </p>
+        <p>
+          En {site.foundedYear}, les deux sociétés ont choisi de ne plus faire qu’une : le <strong>{site.acronymExpanded}</strong>. Une seule
+          association, un seul bureau, une seule carte, un seul calendrier, avec la même attention pour les deux communes.
+        </p>
+        <p><a class="link-arrow" href={withBase('/association/')}>L’histoire et le fonctionnement du G.I.C.</a></p>
+      </div>
+      <div class="split__figure">
+        <FusionDiagram />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sand" aria-labelledby="audiences-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Pour qui ?</p>
+        <h2 id="audiences-title">Chasseurs, propriétaires, promeneurs : trouvez votre chemin</h2>
+      </div>
+      <ol class="audiences" role="list">
+        {
+          audiences.map((audience, index) => (
+            <li class="audience">
+              <span class="audience__num" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <h3>{audience.title}</h3>
+              <p>{audience.text}</p>
+              <ul class="audience__links" role="list">
+                {audience.links.map((link) => (
+                  <li>
+                    <a class="link-arrow" href={withBase(link.href)}>
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="agenda-title">
+    <div class="container agenda-preview">
+      <div class="section-head stack">
+        <p class="eyebrow">Agenda</p>
+        <h2 id="agenda-title">Les prochaines dates</h2>
+        <p class="muted">
+          Battues, chantiers et rendez-vous du G.I.C. Abonnez votre téléphone au calendrier pour ne rien manquer.
+        </p>
+        <div class="agenda-preview__actions">
+          <a class="btn" href={withBase('/agenda/')}>Tout l’agenda</a>
+          <a class="btn btn--stone" href={withBase('/agenda.ics')}>S’abonner (.ics)</a>
+        </div>
+      </div>
+      <div>
+        <ul class="agenda-preview__list" role="list" data-agenda-live data-limit={HOME_EVENTS}>
+          {upcoming.map((event, index) => <EventRow event={event} compact hidden={index >= HOME_EVENTS} />)}
+        </ul>
+        <p class="agenda-preview__empty muted" data-agenda-empty hidden={upcoming.length > 0}>
+          Aucune date programmée pour le moment. Le calendrier de la prochaine saison sera publié après l’assemblée générale.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sand bories" aria-labelledby="bories-title">
+    <div class="container split split--reverse">
+      <div class="split__text stack">
+        <p class="eyebrow">Pourquoi « des Bories » ?</p>
+        <h2 id="bories-title">Des cabanes de pierre sèche, pierre après pierre</h2>
+        <p>
+          Sur le causse de Saint-Jory et les coteaux de Corgnac, des dizaines de bories veillent au bord des anciens champs. Montées sans mortier par
+          les paysans qui épierraient leurs terres, elles tiennent debout depuis deux siècles grâce à une seule règle : chaque pierre s’appuie sur les
+          autres.
+        </p>
+        <p>C’est ce que nos deux communes ont en commun, et c’est l’idée même du groupement.</p>
+        <p><a class="link-arrow" href={withBase('/territoire/')}>Le territoire et ses bories</a></p>
+      </div>
+      <div class="split__figure bories__art">
+        <BorieVignette seed={4} label="Illustration : une borie sur son tertre, entre un chêne et des genévriers." />
+      </div>
+    </div>
+  </section>
+
+  {
+    news.length > 0 && (
+      <section class="section" aria-labelledby="news-title">
+        <div class="container">
+          <div class="section-head section-head--row">
+            <div class="stack">
+              <p class="eyebrow">Actualités</p>
+              <h2 id="news-title">Du côté du G.I.C.</h2>
+            </div>
+            <a class="link-arrow" href={withBase('/actualites/')}>
+              Toutes les actualités
+            </a>
+          </div>
+          <ul class="news-grid" role="list">
+            {news.map((entry) => (
+              <li>
+                <NewsCard entry={entry} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section section--sand cta" aria-labelledby="cta-title">
+    <div class="container cta-band">
+      <div class="stack">
+        <p class="eyebrow">Saison {site.firstSeason}</p>
+        <h2 id="cta-title">Rejoindre le G.I.C. des Bories</h2>
+        <p class="lead">
+          Anciens adhérents de Saint-Jory ou de Leymeronie, nouveaux habitants, jeunes chasseurs : une seule carte, tout le territoire.
+        </p>
+      </div>
+      <div class="cta-band__actions">
+        <a class="btn btn--blaze" href={withBase('/adherer/')}>Comment adhérer</a>
+        <a class="btn btn--stone" href={withBase('/contact/')}>Poser une question</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { initAgendaLive } from '@/scripts/agenda-live';
+  initAgendaLive();
+</script>
+
+<style>
+  /* ---- Hero ---- */
+  .hero {
+    overflow: hidden;
+  }
+
+  .hero__text {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+    padding-block: var(--space-xl) var(--space-m);
+  }
+
+  .hero h1 {
+    font-size: var(--step-5);
+    line-height: 0.95;
+    font-weight: 800;
+    font-style: italic;
+    color: var(--ink);
+  }
+
+  .hero__small {
+    display: block;
+    margin-bottom: 0.35em;
+    font-size: 0.36em;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: 0;
+    color: var(--ink-2);
+  }
+
+  .hero__lead {
+    max-width: 36rem;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .hero__art {
+    display: flex;
+    flex-direction: column;
+    height: clamp(17rem, 72vw, 30rem);
+    margin-top: calc(-1 * var(--space-l));
+  }
+
+  .hero__scene {
+    flex: 1;
+    min-height: 0;
+    /* Le sol de l'illustration passe sous le muret. */
+    margin-bottom: -14px;
+  }
+
+  @media (min-width: 60em) {
+    .hero__text {
+      padding-block: var(--space-xl) 0;
+    }
+
+    .hero__text > * {
+      max-width: 36rem;
+    }
+
+    /* Le ciel de l'illustration glisse sous le texte ; les collines commencent après. */
+    .hero__art {
+      height: clamp(30rem, 44vw, 42rem);
+      margin-top: calc(-1 * clamp(9rem, 15vw, 14rem));
+    }
+  }
+
+  /* ---- Chiffres ---- */
+  .facts {
+    background: var(--oak-900);
+    color: var(--on-dark);
+  }
+
+  .facts__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 0;
+  }
+
+  .facts__list > div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.15rem;
+    padding: var(--space-m) var(--space-s);
+    border-left: 1px solid rgb(246 241 231 / 0.14);
+  }
+
+  .facts__list > div:nth-child(odd) {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .facts dt {
+    font-family: var(--font-sc);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: lowercase;
+    color: var(--on-dark-2);
+  }
+
+  .facts dd {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 800;
+    font-size: var(--step-4);
+    line-height: 1;
+    color: var(--on-dark);
+  }
+
+  .facts .facts__season {
+    font-size: var(--step-3);
+    padding-top: 0.25em;
+    color: var(--blaze-300);
+  }
+
+  @media (min-width: 48em) {
+    .facts__list {
+      grid-template-columns: repeat(4, auto);
+      justify-content: space-between;
+    }
+
+    .facts__list > div,
+    .facts__list > div:nth-child(odd) {
+      border-left: 1px solid rgb(246 241 231 / 0.14);
+      padding: var(--space-l) var(--space-l);
+    }
+
+    .facts__list > div:first-child {
+      border-left: 0;
+      padding-left: 0;
+    }
+  }
+
+  /* ---- Publics ---- */
+  .audiences {
+    display: grid;
+    gap: var(--space-l);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .audience {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: var(--space-s);
+    padding-top: var(--space-m);
+    border-top: 3px solid var(--ink);
+  }
+
+  .audience__num {
+    font-family: var(--font-serif);
+    font-weight: 800;
+    font-style: italic;
+    font-size: var(--step-2);
+    color: var(--ochre-700);
+    line-height: 1;
+  }
+
+  .audience p {
+    color: var(--ink-2);
+  }
+
+  .audience__links {
+    display: grid;
+    gap: 0.6rem;
+    justify-items: start;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* ---- Agenda ---- */
+  .agenda-preview {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .agenda-preview .section-head {
+    margin-bottom: 0;
+    align-content: start;
+  }
+
+  .agenda-preview__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-top: var(--space-xs);
+  }
+
+  .agenda-preview__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-bottom: 1px solid var(--stone-300);
+  }
+
+  @media (min-width: 60em) {
+    .agenda-preview {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: var(--space-2xl);
+    }
+
+    .agenda-preview .section-head {
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-l));
+    }
+  }
+
+  /* ---- Bories ---- */
+  .bories__art {
+    max-width: 30rem;
+    justify-self: center;
+    width: 100%;
+  }
+
+  /* ---- Actualités ---- */
+  .news-grid {
+    display: grid;
+    gap: var(--space-l);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>

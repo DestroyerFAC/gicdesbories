@@ -1,0 +1,316 @@
+---
+import LogoMark from './LogoMark.astro';
+import { mainNav, site } from '@/config/site';
+import { isActiveSection, stripBase, withBase } from '@/lib/url';
+
+/*
+ * Navigation mobile : API Popover native. Le menu s'ouvre, se ferme
+ * (Échap, clic extérieur) et expose aria-expanded sans une ligne de JS.
+ */
+const current = stripBase(import.meta.env.BASE_URL, Astro.url.pathname);
+const links = mainNav.map((item) => ({ ...item, active: isActiveSection(current, item.href) }));
+const contactActive = isActiveSection(current, '/contact/');
+---
+
+<header class="site-header">
+  <div class="site-header__inner container">
+    <a class="brand" href={withBase('/')} aria-label={`${site.acronymExpanded}, retour à l’accueil`}>
+      <LogoMark size={42} />
+      <span class="brand__text">
+        <span class="brand__name">G.I.C. <em>des Bories</em></span>
+        <span class="brand__sub">Saint-Jory · Corgnac</span>
+      </span>
+    </a>
+
+    <button class="menu-toggle" type="button" popovertarget="site-menu" aria-controls="site-menu">
+      <span class="menu-toggle__icon" aria-hidden="true"><span></span><span></span><span></span></span>
+      <span>Menu</span>
+    </button>
+
+    <nav id="site-menu" class="site-nav" popover aria-label="Navigation principale">
+      <div class="site-nav__top">
+        <span class="site-nav__title">Menu</span>
+        <button class="site-nav__close" type="button" popovertarget="site-menu" popovertargetaction="hide">
+          Fermer <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <ul class="site-nav__list" role="list">
+        {
+          links.map((item) => (
+            <li>
+              <a
+                href={withBase(item.href)}
+                class:list={['site-nav__link', { 'is-highlight': item.highlight }]}
+                aria-current={item.active ? 'page' : undefined}
+              >
+                {item.highlight && <span class="dot-blaze" aria-hidden="true" />}
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="btn btn--blaze site-nav__cta" href={withBase('/contact/')} aria-current={contactActive ? 'page' : undefined}>
+        Nous contacter
+      </a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--paper);
+    border-bottom: 1px solid var(--stone-300);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+    min-height: var(--header-height);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .brand:hover {
+    color: var(--ink);
+  }
+
+  .brand__text {
+    display: grid;
+    line-height: 1;
+  }
+
+  .brand__name {
+    font-family: var(--font-serif);
+    font-weight: 800;
+    font-size: 1.32rem;
+    letter-spacing: -0.01em;
+  }
+
+  .brand__name em {
+    font-style: italic;
+    font-weight: 700;
+    color: var(--ochre-700);
+  }
+
+  .brand__sub {
+    margin-top: 0.3rem;
+    font-family: var(--font-sc);
+    font-weight: 500;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    color: var(--ink-3);
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 2.75rem;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--stone-400);
+    border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* Trois « assises » de longueurs inégales plutôt qu'un hamburger standard. */
+  .menu-toggle__icon {
+    display: grid;
+    gap: 4px;
+    width: 20px;
+  }
+
+  .menu-toggle__icon span {
+    display: block;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+  }
+
+  .menu-toggle__icon span:nth-child(1) {
+    width: 60%;
+    margin-inline: auto;
+  }
+
+  .menu-toggle__icon span:nth-child(2) {
+    width: 85%;
+    margin-inline: auto;
+  }
+
+  /* ---- Menu mobile (popover) ---- */
+  .site-nav {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: var(--space-s) var(--gutter) var(--space-xl);
+    border: 0;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-y: auto;
+  }
+
+  .site-nav:popover-open {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-l);
+  }
+
+  .site-nav::backdrop {
+    background: rgb(35 32 27 / 0.4);
+  }
+
+  .site-nav__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: calc(var(--header-height) - var(--space-s));
+    border-bottom: 1px solid var(--stone-300);
+  }
+
+  .site-nav__title {
+    font-family: var(--font-sc);
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: lowercase;
+    color: var(--ochre-700);
+  }
+
+  .site-nav__close {
+    min-height: 2.75rem;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--stone-400);
+    border-radius: var(--radius);
+    background: transparent;
+    font: inherit;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .site-nav__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+  }
+
+  .site-nav__link {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px dashed var(--stone-300);
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: var(--step-2);
+    text-decoration: none;
+  }
+
+  .site-nav__link[aria-current='page'] {
+    color: var(--ochre-700);
+  }
+
+  .site-nav__cta {
+    align-self: flex-start;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .site-nav:popover-open {
+      animation: menu-in 0.22s var(--ease);
+    }
+
+    @keyframes menu-in {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+    }
+  }
+
+  /* ---- Bureau : navigation en ligne ---- */
+  @media (min-width: 68em) {
+    .menu-toggle,
+    .site-nav__top {
+      display: none;
+    }
+
+    .site-nav,
+    .site-nav:popover-open {
+      position: static;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-m);
+      width: auto;
+      height: auto;
+      padding: 0;
+      background: transparent;
+      overflow: visible;
+      animation: none;
+    }
+
+    .site-nav__list {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .site-nav__link {
+      position: relative;
+      padding: 0.5rem 0.6rem;
+      border: 0;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 1.02rem;
+      gap: 0.45rem;
+    }
+
+    .site-nav__link::after {
+      content: '';
+      position: absolute;
+      left: 0.6rem;
+      right: 0.6rem;
+      bottom: 0.15rem;
+      height: 2px;
+      background: var(--ochre-700);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.2s var(--ease);
+    }
+
+    .site-nav__link:hover::after,
+    .site-nav__link[aria-current='page']::after {
+      transform: scaleX(1);
+    }
+
+    .site-nav__link[aria-current='page'] {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .site-nav__cta {
+      min-height: 2.6rem;
+      font-size: 1rem;
+    }
+  }
+</style>

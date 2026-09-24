@@ -1,0 +1,41 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import NewsCard from '@/components/NewsCard.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { getPublishedNews } from '@/lib/news';
+
+const news = await getPublishedNews();
+---
+
+<BaseLayout title="Actualités" description="Les nouvelles du G.I.C. des Bories : vie de l’association, sécurité, territoire et saison de chasse.">
+  <PageHeader
+    eyebrow="Actualités"
+    title="Du côté du G.I.C."
+    lead="Vie de l’association, sécurité, chantiers sur le territoire : ce qui se passe entre Saint-Jory et Corgnac."
+    seed={13}
+  />
+
+  <section class="section" aria-label="Liste des articles">
+    <div class="container">
+      {
+        news.length > 0 ? (
+          <ul class="grid-auto news-list" role="list">
+            {news.map((entry) => (
+              <li>
+                <NewsCard entry={entry} headingLevel="h2" />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="muted">Aucun article publié pour le moment.</p>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .news-list {
+    --grid-min: 20rem;
+  }
+</style>

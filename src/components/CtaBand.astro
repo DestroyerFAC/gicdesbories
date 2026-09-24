@@ -1,0 +1,33 @@
+---
+import { withBase } from '@/lib/url';
+
+interface Action {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  text: string;
+  primary: Action;
+  secondary?: Action;
+}
+
+const { eyebrow, title, text, primary, secondary } = Astro.props;
+const id = `cta-${title.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+---
+
+<section class="section section--sand" aria-labelledby={id}>
+  <div class="container cta-band">
+    <div class="stack">
+      <p class="eyebrow">{eyebrow}</p>
+      <h2 id={id}>{title}</h2>
+      <p class="lead">{text}</p>
+    </div>
+    <div class="cta-band__actions">
+      <a class="btn btn--blaze" href={withBase(primary.href)}>{primary.label}</a>
+      {secondary && <a class="btn btn--stone" href={withBase(secondary.href)}>{secondary.label}</a>}
+    </div>
+  </div>
+</section>

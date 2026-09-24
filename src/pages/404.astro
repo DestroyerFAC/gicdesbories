@@ -1,0 +1,54 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import BorieVignette from '@/components/art/BorieVignette.astro';
+import { withBase } from '@/lib/url';
+---
+
+<BaseLayout title="Page introuvable" description="Cette page n’existe pas ou a été déplacée." noindex>
+  <section class="section">
+    <div class="container lost">
+      <div class="stack lost__text">
+        <p class="eyebrow">Erreur 404</p>
+        <h1>Vous voilà hors du chemin</h1>
+        <p class="lead">Cette page n’existe pas, ou plus. Pas d’inquiétude : les bories, elles, n’ont pas bougé.</p>
+        <div class="lost__actions">
+          <a class="btn" href={withBase('/')}>Retour à l’accueil</a>
+          <a class="btn btn--stone" href={withBase('/agenda/')}>Voir l’agenda</a>
+        </div>
+      </div>
+      <div class="lost__art">
+        <BorieVignette seed={404} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lost {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  .lost__text {
+    --stack-space: var(--space-m);
+  }
+
+  .lost__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .lost__art {
+    max-width: 26rem;
+    width: 100%;
+    justify-self: center;
+  }
+
+  @media (min-width: 52em) {
+    .lost {
+      grid-template-columns: 1.2fr 1fr;
+    }
+  }
+</style>

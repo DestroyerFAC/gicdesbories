@@ -1,0 +1,150 @@
+---
+import Borie from './Borie.astro';
+import { buildDryStoneWall } from '@/lib/drystone';
+import { juniper, oakTree, ridge, shrubs as shrubRow, treeLine } from '@/lib/landscape';
+
+/**
+ * Panorama du causse au petit matin : collines de l'Isle, lisières de chênes,
+ * genévriers, murets et bories. Entièrement vectoriel et généré au build
+ * (≈ 40 Ko, aucune photo à charger).
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const W = 1600;
+const H = 760;
+
+const far = ridge({ width: W, baseY: 430, amplitude: 20, bottom: H, seed: 21 });
+const hills = ridge({ width: W, baseY: 486, amplitude: 24, bottom: H, seed: 34, tilt: 12 });
+const mid = ridge({ width: W, baseY: 548, amplitude: 22, bottom: H, seed: 8, tilt: -18 });
+const causse = ridge({ width: W, baseY: 622, amplitude: 16, bottom: H, seed: 55, tilt: -36 });
+const front = ridge({ width: W, baseY: 708, amplitude: 7, bottom: H, seed: 3 });
+
+const farTrees = treeLine(-10, W + 10, far.yAt, 6, 11, 4);
+const hillTrees = treeLine(-10, W + 10, hills.yAt, 9, 16, 12);
+const midTrees = treeLine(-20, 520, mid.yAt, 14, 22, 19);
+
+const oaks = [
+  { x: 610, size: 58, seed: 2 },
+  { x: 1575, size: 84, seed: 9 },
+  { x: 1255, size: 50, seed: 5 },
+].map((tree) => ({ ...tree, shape: oakTree(tree.x, causse.yAt(tree.x) + 4, tree.size, tree.seed) }));
+
+const junipers = [
+  { x: 470, h: 42 },
+  { x: 540, h: 58 },
+  { x: 975, h: 96 },
+  { x: 1008, h: 64 },
+  { x: 1318, h: 78 },
+  { x: 1500, h: 104 },
+].map((j, i) => juniper(j.x, causse.yAt(j.x) + 8, j.h, 70 + i));
+
+
+const shrubs = shrubRow(-20, W + 20, front.yAt, 60);
+
+const bories = {
+  distant: { cx: 760, w: 54, h: 70 },
+  second: { cx: 1420, w: 118, h: 156 },
+  main: { cx: 1120, w: 262, h: 372 },
+};
+
+// Murets de champ, en retrait : pierres plus petites, teintes adoucies par la distance.
+const muretStones = ['#cdb993', '#c2ad85', '#d8c9aa', '#b9a37c'];
+const murets = [
+  { x: -10, y: causse.yAt(200) + 52, wall: buildDryStoneWall({ width: 520, height: 17, seed: 61, tones: 4 }) },
+  { x: 1300, y: causse.yAt(1450) + 44, wall: buildDryStoneWall({ width: 320, height: 15, seed: 62, tones: 4 }) },
+];
+---
+
+<svg
+  class:list={['hero-landscape', className]}
+  viewBox={`0 0 ${W} ${H}`}
+  preserveAspectRatio="xMaxYMax slice"
+  role="img"
+  aria-labelledby="hero-landscape-title"
+  focusable="false"
+>
+  <title id="hero-landscape-title">
+    Illustration : bories en pierre sèche sur le causse, entre chênes et genévriers, au lever du jour.
+  </title>
+  <defs>
+    <linearGradient id="hero-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6f1e7" stop-opacity="0"></stop>
+      <stop offset="0.45" stop-color="#f4e8d3" stop-opacity="0.7"></stop>
+      <stop offset="0.8" stop-color="#f0dcb8"></stop>
+    </linearGradient>
+    <radialGradient id="hero-sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#f7dcaa"></stop>
+      <stop offset="0.45" stop-color="#f4d6a0" stop-opacity="0.55"></stop>
+      <stop offset="1" stop-color="#f4d6a0" stop-opacity="0"></stop>
+    </radialGradient>
+    <linearGradient id="hero-haze" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f3e5cc" stop-opacity="0"></stop>
+      <stop offset="1" stop-color="#f3e5cc" stop-opacity="0.55"></stop>
+    </linearGradient>
+  </defs>
+
+  <rect width={W} height={H} fill="url(#hero-sky)"></rect>
+  <circle cx="330" cy="420" r="190" fill="url(#hero-sun)"></circle>
+  <circle cx="330" cy="420" r="46" fill="#f8e2b6"></circle>
+
+  <!-- Lointains -->
+  <path d={farTrees} fill="#cfcab0"></path>
+  <path d={far.d} fill="#cfcab0"></path>
+  <path d={hillTrees} fill="#b3b793"></path>
+  <path d={hills.d} fill="#b3b793"></path>
+  <rect y="380" width={W} height="200" fill="url(#hero-haze)"></rect>
+
+  <!-- Coteau boisé -->
+  <path d={midTrees} fill="#8f9a6f"></path>
+  <path d={mid.d} fill="#9ba47c"></path>
+  <g transform={`translate(0 ${mid.yAt(760) - 4})`}>
+    <Borie cx={760} baseY={0} width={bories.distant.w} height={bories.distant.h} seed={41} palette="far" detail={0.4} shadow={false} doorOffset={-0.1} />
+  </g>
+
+  <!-- Causse -->
+  <path d={causse.d} fill="#d8c8a2"></path>
+
+  {
+    oaks.map((tree) => (
+      <g>
+        <path d={tree.shape.trunk} fill="#4a3a28" />
+        <path d={tree.shape.crown} fill="#6f7b55" />
+        <path d={tree.shape.shadow} fill="#5a6645" opacity="0.7" />
+      </g>
+    ))
+  }
+
+  <Borie cx={bories.second.cx} baseY={causse.yAt(1420) + 30} width={bories.second.w} height={bories.second.h} seed={7} detail={0.7} doorOffset={-0.12} />
+
+  {junipers.map((d) => <path d={d} fill="#4e5b3c" />)}
+
+  {
+    murets.map((m) => (
+      <g transform={`translate(${m.x} ${m.y})`}>
+        <rect y={m.wall.height * 0.2} width={m.wall.width} height={m.wall.height * 0.8} fill="#7a6a50" />
+        {m.wall.layers.map((layer) => (
+          <path d={layer.d} fill={muretStones[layer.tone]} />
+        ))}
+      </g>
+    ))
+  }
+
+  <Borie cx={bories.main.cx} baseY={causse.yAt(1135) + 72} width={bories.main.w} height={bories.main.h} seed={3} doorOffset={-0.08} />
+
+  <!-- Premier plan -->
+  <path d={front.d} fill="#cdb98f"></path>
+  <path d={shrubs} fill="#8c875c"></path>
+</svg>
+
+<style>
+  .hero-landscape {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+  }
+</style>

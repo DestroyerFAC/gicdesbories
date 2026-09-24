@@ -1,0 +1,300 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { site } from '@/config/site';
+import { GAME_GROUPS, huntingModes, safetyRules, species, type GameGroup } from '@/data/chasse';
+import { withBase } from '@/lib/url';
+
+const groups = (Object.keys(GAME_GROUPS) as GameGroup[])
+  .map((group) => ({ group, label: GAME_GROUPS[group], items: species.filter((s) => s.group === group) }))
+  .filter((entry) => entry.items.length > 0);
+
+const battueDay = [
+  { time: 'Le matin', title: 'Pose des panneaux', text: 'Les routes et chemins qui entrent dans le secteur sont signalés « Chasse en cours ».' },
+  { time: 'Au rond', title: 'Appel et consignes', text: 'Le chef de battue rappelle les règles, présente le secteur, attribue les postes. Chacun signe le carnet de battue.' },
+  { time: 'Aux postes', title: 'Placement', text: 'Chaque posté repère ses voisins, ses angles de tir et les zones interdites avant de charger son arme.' },
+  { time: 'La traque', title: 'Traqueurs et chiens', text: 'Les traqueurs avancent avec les chiens pour pousser le gibier vers la ligne. Personne ne quitte son poste.' },
+  { time: 'La fin', title: 'Signal et déchargement', text: 'Au signal de fin, les armes sont déchargées sur place avant tout déplacement.' },
+  { time: 'Après', title: 'Retrait et partage', text: 'Les panneaux sont retirés, le tableau est enregistré et la venaison partagée selon le règlement intérieur.' },
+];
+---
+
+<BaseLayout
+  title="La chasse"
+  description="Battues au grand gibier, chasse devant soi, espèces chassées et règles de sécurité sur le territoire du G.I.C. des Bories."
+>
+  <PageHeader
+    eyebrow="La chasse"
+    title="Chasser ensemble, chasser sûr"
+    lead="Battues au grand gibier, chasse devant soi, affût : comment se pratique la chasse sur le territoire du G.I.C., et les règles que chacun respecte."
+    seed={11}
+  />
+
+  <section class="section" aria-labelledby="modes-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Modes de chasse</p>
+        <h2 id="modes-title">Trois façons de chasser le territoire</h2>
+      </div>
+      <ul class="grid-auto" role="list">
+        {
+          huntingModes.map((mode) => (
+            <li class="card">
+              <h3>{mode.title}</h3>
+              <p>{mode.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--oak" id="securite" aria-labelledby="securite-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Sécurité</p>
+        <h2 id="securite-title">Six règles, sans exception</h2>
+        <p class="lead">
+          Elles sont rappelées à chaque rond du matin et s’appliquent à tous : sociétaires, invités, traqueurs, sans exception ni tolérance.
+        </p>
+      </div>
+      <ol class="numbered" role="list">
+        {
+          safetyRules.map((rule) => (
+            <li>
+              <h3>{rule.title}</h3>
+              <p>{rule.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="battue-title">
+    <div class="container split split--top">
+      <div class="split__text stack">
+        <p class="eyebrow">Une journée de battue</p>
+        <h2 id="battue-title">Du rond du matin au retrait des panneaux</h2>
+        <p>
+          Une battue est un moment collectif, très encadré. Voici comment elle se déroule au G.I.C., que vous soyez posté, traqueur ou simple invité.
+        </p>
+        <p>
+          <a class="link-arrow" href={withBase('/agenda/?filtre=battue')}>Voir les dates de battue</a>
+        </p>
+      </div>
+      <ol class="daybook" role="list">
+        {
+          battueDay.map((step) => (
+            <li>
+              <span class="daybook__time">{step.time}</span>
+              <div>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--sand" aria-labelledby="especes-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Le gibier</p>
+        <h2 id="especes-title">Les espèces chassées</h2>
+        <p class="muted">
+          Les prélèvements suivent le plan de chasse attribué au G.I.C. et le schéma départemental de gestion cynégétique de la {site.department}.
+        </p>
+      </div>
+      <div class="field-guide">
+        {
+          groups.map((entry) => (
+            <section class="field-guide__group" aria-labelledby={`groupe-${entry.group}`}>
+              <h3 id={`groupe-${entry.group}`} class="field-guide__label">
+                {entry.label}
+              </h3>
+              <dl class="field-guide__list">
+                {entry.items.map((item) => (
+                  <div class="field-guide__item">
+                    <dt>
+                      <span class="field-guide__name">{item.name}</span>
+                      <i lang="la" class="field-guide__latin">
+                        {item.latin}
+                      </i>
+                    </dt>
+                    <dd>{item.note}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="saison-title">
+    <div class="container split split--top">
+      <div class="split__text stack">
+        <p class="eyebrow">La saison</p>
+        <h2 id="saison-title">Dates d’ouverture et de fermeture</h2>
+        <p>
+          Elles sont fixées chaque année par arrêté préfectoral pour la {site.department}, avec des dates particulières pour certaines espèces. Le
+          G.I.C. y ajoute ses propres règles : jours de battue, secteurs, quotas internes.
+        </p>
+        <p>Avant chaque sortie, vérifiez que votre validation de permis et votre assurance sont en cours.</p>
+      </div>
+      <ul class="links-list" role="list">
+        {
+          site.links.map((link) => (
+            <li>
+              <a href={link.href} rel="noopener noreferrer external" target="_blank">
+                <strong>{link.label}</strong>
+                <span>{link.description}</span>
+                <span class="visually-hidden"> (nouvel onglet)</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow={`Saison ${site.firstSeason}`}
+    title="Chasser avec le G.I.C."
+    text="Une seule carte pour tout le territoire. Anciens adhérents de Saint-Jory ou de Leymeronie : votre place est toute trouvée."
+    primary={{ href: '/adherer/', label: 'Comment adhérer' }}
+    secondary={{ href: '/contact/?objet=adhesion', label: 'Poser une question' }}
+  />
+</BaseLayout>
+
+<style>
+  .daybook {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--stone-300);
+  }
+
+  .daybook li {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: var(--space-m);
+    padding-block: var(--space-m);
+    border-bottom: 1px solid var(--stone-300);
+  }
+
+  .daybook__time {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 700;
+    font-size: var(--step-1);
+    color: var(--ochre-700);
+    line-height: 1.2;
+  }
+
+  .daybook p {
+    color: var(--ink-2);
+    margin-top: 0.25rem;
+  }
+
+  @media (max-width: 30em) {
+    .daybook li {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+  }
+
+  .field-guide {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 60em) {
+    .field-guide {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-l);
+    }
+  }
+
+  .field-guide__label {
+    padding-bottom: var(--space-xs);
+    border-bottom: 2px solid var(--ink);
+    font-family: var(--font-sc);
+    font-weight: 700;
+    font-size: var(--step-0);
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    color: var(--ochre-700);
+  }
+
+  .field-guide__list {
+    margin: 0;
+  }
+
+  .field-guide__item {
+    padding-block: var(--space-s);
+    border-bottom: 1px solid var(--stone-300);
+  }
+
+  .field-guide__item dt {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2rem 0.6rem;
+  }
+
+  .field-guide__name {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: var(--step-1);
+  }
+
+  .field-guide__latin {
+    font-family: var(--font-serif);
+    color: var(--ink-3);
+  }
+
+  .field-guide__item dd {
+    margin: 0.25rem 0 0;
+    color: var(--ink-2);
+  }
+
+  .links-list {
+    display: grid;
+    gap: var(--space-s);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .links-list a {
+    display: grid;
+    gap: 0.2rem;
+    padding: var(--space-m);
+    border: 1px solid var(--stone-300);
+    border-radius: var(--radius);
+    background: var(--paper-2);
+    text-decoration: none;
+    box-shadow: inset 0 -3px 0 var(--stone-300);
+  }
+
+  .links-list a:hover {
+    border-color: var(--stone-500);
+    color: var(--ink);
+  }
+
+  .links-list strong::after {
+    content: ' ↗';
+    color: var(--ochre-700);
+  }
+
+  .links-list span {
+    color: var(--ink-2);
+  }
+</style>

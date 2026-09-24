@@ -1,0 +1,14 @@
+{
+  "name": "G.I.C. des Bories",
+  "short_name": "GIC Bories",
+  "description": "Groupement Intercommunal de Chasse des Bories : Saint-Jory-las-Bloux et Corgnac-sur-l’Isle.",
+  "lang": "fr",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f6f1e7",
+  "theme_color": "#1f2a1d",
+  "icons": [
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

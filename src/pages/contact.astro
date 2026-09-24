@@ -1,0 +1,219 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { site } from '@/config/site';
+import { CONTACT_TOPICS, MESSAGE_MAX_LENGTH } from '@/lib/contact';
+
+const topics = Object.entries(CONTACT_TOPICS);
+const fdc = site.links.find((link) => link.href.includes('chasseurs24'));
+---
+
+<BaseLayout
+  title="Contact"
+  description="Écrire au bureau du G.I.C. des Bories : adhésion, terrain à confier, dégâts de gibier, sécurité."
+>
+  <PageHeader
+    eyebrow="Contact"
+    title="Écrire au bureau"
+    lead="Adhésion, terrain à confier, dégâts de gibier, signalement : dites-nous tout, le bureau vous répond."
+    seed={6}
+  />
+
+  <section class="section">
+    <div class="container contact">
+      <form
+        class="contact-form"
+        data-contact-form
+        data-recipient={site.contact.email}
+        data-site-name={site.name}
+        action={`mailto:${site.contact.email}`}
+        method="post"
+        enctype="text/plain"
+        aria-describedby="form-privacy"
+      >
+        <p class="contact-form__summary" role="status" data-form-summary hidden></p>
+
+        <div class="contact-form__row">
+          <div class="field">
+            <label for="name">Nom et prénom</label>
+            <input class="input" id="name" name="name" type="text" autocomplete="name" required maxlength="80" aria-describedby="name-error" />
+            <p class="field-error" id="name-error" data-error-for="name"></p>
+          </div>
+          <div class="field">
+            <label for="email">Adresse e-mail</label>
+            <input
+              class="input"
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              inputmode="email"
+              required
+              aria-describedby="email-error"
+            />
+            <p class="field-error" id="email-error" data-error-for="email"></p>
+          </div>
+        </div>
+
+        <div class="contact-form__row">
+          <div class="field">
+            <label for="phone">Téléphone <span class="muted">(facultatif)</span></label>
+            <input class="input" id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" aria-describedby="phone-error" />
+            <p class="field-error" id="phone-error" data-error-for="phone"></p>
+          </div>
+          <div class="field">
+            <label for="topic">Objet</label>
+            <select class="input" id="topic" name="topic" required aria-describedby="topic-error">
+              <option value="">Choisir…</option>
+              {topics.map(([value, label]) => <option value={value}>{label}</option>)}
+            </select>
+            <p class="field-error" id="topic-error" data-error-for="topic"></p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="message">Votre message</label>
+          <textarea
+            class="input"
+            id="message"
+            name="message"
+            required
+            minlength="10"
+            maxlength={MESSAGE_MAX_LENGTH}
+            rows="7"
+            aria-describedby="message-error message-counter"></textarea>
+          <p class="hint" id="message-counter" data-counter aria-live="polite"></p>
+          <p class="field-error" id="message-error" data-error-for="message"></p>
+        </div>
+
+        <div class="contact-form__footer">
+          <button class="btn btn--blaze" type="submit">Préparer mon e-mail</button>
+          <p class="hint" id="form-privacy">
+            Ce formulaire ouvre votre messagerie avec un message prérempli : rien n’est enregistré par le site, vous gardez la main sur l’envoi.
+          </p>
+        </div>
+      </form>
+
+      <aside class="contact-aside" aria-label="Autres moyens de nous joindre">
+        <div class="card">
+          <h2 class="contact-aside__title">Par e-mail</h2>
+          <p><a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></p>
+          {site.contact.postalAddress && <p>{site.contact.postalAddress.join(', ')}</p>}
+        </div>
+
+        <div class="card">
+          <h2 class="contact-aside__title">Dégâts de gibier</h2>
+          <p>
+            Prévenez-nous rapidement, photos à l’appui si possible : un membre du bureau viendra constater. L’indemnisation des dégâts de grand gibier aux cultures
+            relève de la Fédération départementale des chasseurs.
+          </p>
+          {
+            fdc && (
+              <p>
+                <a href={fdc.href} rel="noopener noreferrer external" target="_blank">
+                  {fdc.label}
+                  <span class="visually-hidden"> (nouvel onglet)</span>
+                </a>
+              </p>
+            )
+          }
+        </div>
+
+        <div class="card card--alert">
+          <h2 class="contact-aside__title">Urgence</h2>
+          <p>Accident, personne blessée, collision avec un animal sur la route : appelez les secours.</p>
+          <p class="contact-aside__big"><a href="tel:112">112</a></p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { initContactForm } from '@/scripts/contact-form';
+  initContactForm();
+</script>
+
+<style>
+  .contact {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 60em) {
+    .contact {
+      grid-template-columns: minmax(0, 1.6fr) minmax(16rem, 1fr);
+      align-items: start;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .contact-form {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .contact-form__row {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  @media (min-width: 40em) {
+    .contact-form__row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .contact-form__summary {
+    padding: var(--space-s) var(--space-m);
+    border-inline-start: 4px solid var(--blaze-500);
+    background: var(--paper-2);
+    font-weight: 700;
+  }
+
+  .contact-form__footer {
+    display: grid;
+    gap: var(--space-s);
+    justify-items: start;
+  }
+
+  .contact-form__footer .hint {
+    max-width: 52ch;
+  }
+
+  .contact-aside {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .contact-aside__title {
+    font-family: var(--font-sc);
+    font-weight: 700;
+    font-size: var(--step-0);
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    color: var(--ochre-700);
+  }
+
+  .contact-aside a {
+    overflow-wrap: anywhere;
+  }
+
+  .card--alert {
+    border-color: #e9b89a;
+    background: #fbeee4;
+    box-shadow: inset 0 -3px 0 #e9b89a;
+  }
+
+  .contact-aside__big {
+    font-family: var(--font-serif);
+    font-weight: 800;
+    font-size: var(--step-3);
+    line-height: 1;
+  }
+
+  .contact-aside__big a {
+    color: var(--blaze-600);
+    text-decoration: none;
+  }
+</style>

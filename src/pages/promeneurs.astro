@@ -1,0 +1,339 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HuntSign from '@/components/art/HuntSign.astro';
+import EventRow from '@/components/EventRow.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { site } from '@/config/site';
+import { agenda } from '@/data/agenda';
+import { upcomingEvents } from '@/lib/agenda';
+import { toIsoDate } from '@/lib/dates';
+import { withBase } from '@/lib/url';
+
+const BATTUES_SHOWN = 4;
+const battues = upcomingEvents(agenda, toIsoDate(new Date())).filter((event) => event.category === 'battue');
+
+const signs = [
+  {
+    title: 'Des panneaux triangulaires',
+    text: '« Chasse en cours », posés le matin sur les routes et chemins qui entrent dans le secteur, retirés dès la fin.',
+  },
+  {
+    title: 'Des chasseurs en orange',
+    text: 'Gilet et casquette orange fluo, postés le long des chemins ou des lisières, immobiles et silencieux.',
+  },
+  {
+    title: 'Des chiens et des voix',
+    text: 'Aboiements, appels des traqueurs, parfois une corne : la traque avance dans les bois.',
+  },
+];
+
+const tips = [
+  { title: 'Portez une couleur vive', text: 'Orange, jaune ou rouge, surtout le week-end et les jours fériés en saison.' },
+  { title: 'Restez sur les chemins', text: 'Les postés surveillent les passages et savent que les chemins sont fréquentés.' },
+  { title: 'Gardez votre chien près de vous', text: 'En laisse ou au pied : un chien qui file dans les bois peut être pris pour du gibier ou suivre la meute.' },
+  { title: 'Signalez-vous à la voix', text: 'Vous apercevez un chasseur posté ? Parlez-lui : il vous indiquera par où passer en sécurité.' },
+  { title: 'Ne touchez pas aux panneaux', text: 'Les déplacer met tout le monde en danger. Un panneau oublié ? Prévenez-nous.' },
+  { title: 'Consultez l’agenda', text: 'Les dates de battue sont publiées à l’avance et peuvent s’ajouter à votre téléphone.' },
+];
+
+const faq = [
+  {
+    q: 'Ai-je le droit de me promener un jour de battue ?',
+    a: 'Oui. La chasse n’interdit pas la circulation sur les chemins ouverts au public. Les chasseurs doivent s’adapter à votre présence ; les conseils de cette page vous aident à être vu et à passer sereinement.',
+  },
+  {
+    q: 'Quels jours chasse-t-on sur le territoire ?',
+    a: 'La chasse individuelle est possible pendant toute la saison fixée par la préfecture. Les battues au grand gibier, elles, ont lieu aux dates publiées dans notre agenda, principalement le dimanche matin.',
+  },
+  {
+    q: 'Mon chien a rejoint les chiens de chasse, que faire ?',
+    a: 'Restez sur le chemin et appelez-le. Signalez-vous au premier chasseur posté : il préviendra le chef de battue par radio pour que les traqueurs le récupèrent.',
+  },
+  {
+    q: 'J’ai trouvé un animal blessé ou un panneau oublié.',
+    a: 'Ne vous approchez pas d’un grand animal blessé. Notez l’endroit et prévenez-nous : nous interviendrons au plus vite.',
+  },
+  {
+    q: 'Je suis propriétaire : peut-on chasser chez moi sans mon accord ?',
+    a: 'Non. Le droit de chasse appartient au propriétaire : le G.I.C. ne chasse que sur les terrains dont les propriétaires lui ont confié ce droit. Vous pouvez à tout moment nous contacter pour en parler.',
+  },
+];
+---
+
+<BaseLayout
+  title="Promeneurs & riverains"
+  description="Jours de battue, panneaux « Chasse en cours », bons réflexes : tout pour se promener sereinement sur le territoire du G.I.C. des Bories."
+>
+  <PageHeader
+    eyebrow="Promeneurs & riverains"
+    title="Partager les chemins, en toute confiance"
+    lead="La chasse n’interdit pas la promenade. Voici comment savoir où et quand ont lieu nos battues, et les quelques réflexes qui font la différence."
+    seed={5}
+  >
+    <div class="header-actions">
+      <a class="btn btn--blaze" href="#battues">Prochaines battues</a>
+      <a class="btn btn--stone" href={withBase('/agenda.ics')}>Ajouter à mon agenda</a>
+    </div>
+  </PageHeader>
+
+  <section class="section" aria-labelledby="reconnaitre-title">
+    <div class="container split">
+      <div class="split__text stack">
+        <p class="eyebrow">Sur le terrain</p>
+        <h2 id="reconnaitre-title">Reconnaître une battue en cours</h2>
+        <ul class="signs" role="list">
+          {
+            signs.map((sign) => (
+              <li>
+                <h3>{sign.title}</h3>
+                <p>{sign.text}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="sign-figure">
+        <HuntSign />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sand" aria-labelledby="reflexes-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Les bons réflexes</p>
+        <h2 id="reflexes-title">Six gestes simples</h2>
+      </div>
+      <ol class="numbered" role="list">
+        {
+          tips.map((tip) => (
+            <li>
+              <h3>{tip.title}</h3>
+              <p>{tip.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="battues" aria-labelledby="battues-title">
+    <div class="container agenda-block">
+      <div class="stack">
+        <p class="eyebrow">Calendrier</p>
+        <h2 id="battues-title">Les prochaines battues</h2>
+        <p class="muted">
+          Horaires habituels : du rendez-vous du matin au début d’après-midi. Une battue peut être annulée (météo, plan de chasse atteint) :
+          l’agenda est alors mis à jour.
+        </p>
+        <div class="header-actions">
+          <a class="btn" href={withBase('/agenda/?filtre=battue')}>Toutes les battues</a>
+          <a class="btn btn--stone" href={withBase('/agenda.ics')}>S’abonner (.ics)</a>
+        </div>
+      </div>
+      <div>
+        <ul class="battue-list" role="list" data-agenda-live data-limit={BATTUES_SHOWN}>
+          {battues.map((event, index) => <EventRow event={event} compact hidden={index >= BATTUES_SHOWN} />)}
+        </ul>
+        <p class="muted" data-agenda-empty hidden={battues.length > 0}>
+          Aucune battue programmée pour le moment : le calendrier de la prochaine saison sera publié ici.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sand" aria-labelledby="faq-title">
+    <div class="container--narrow">
+      <div class="section-head">
+        <p class="eyebrow">Questions fréquentes</p>
+        <h2 id="faq-title">Vous vous demandez peut-être…</h2>
+      </div>
+      <div class="faq">
+        {
+          faq.map((item) => (
+            <details class="faq__item">
+              <summary>{item.q}</summary>
+              <p>{item.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--oak" aria-labelledby="joindre-title">
+    <div class="container contact-strip">
+      <div class="stack">
+        <p class="eyebrow">Un souci sur le terrain ?</p>
+        <h2 id="joindre-title">Prévenez-nous</h2>
+        <p class="lead">
+          Panneau oublié, comportement dangereux, animal blessé, chien égaré : nous voulons le savoir.
+        </p>
+      </div>
+      <ul class="contact-strip__list" role="list">
+        {
+          site.contact.safetyPhone && (
+            <li>
+              <span>Jours de battue</span>
+              <a href={`tel:${site.contact.safetyPhone.replace(/\s/g, '')}`}>{site.contact.safetyPhone}</a>
+            </li>
+          )
+        }
+        <li>
+          <span>Par écrit</span>
+          <a href={withBase('/contact/?objet=securite')}>Formulaire de signalement</a>
+        </li>
+        <li>
+          <span>Urgence, accident</span>
+          <a href="tel:112">112</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { initAgendaLive } from '@/scripts/agenda-live';
+  initAgendaLive();
+</script>
+
+<style>
+  .header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-top: var(--space-xs);
+  }
+
+  .signs {
+    display: grid;
+    gap: var(--space-m);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .signs li {
+    padding-inline-start: var(--space-m);
+    border-inline-start: 3px solid var(--blaze-500);
+  }
+
+  .signs p {
+    color: var(--ink-2);
+    margin-top: 0.2rem;
+  }
+
+  .sign-figure {
+    width: min(100%, 20rem);
+    justify-self: center;
+  }
+
+  .agenda-block {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .battue-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-bottom: 1px solid var(--stone-300);
+  }
+
+  @media (min-width: 60em) {
+    .agenda-block {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      gap: var(--space-2xl);
+    }
+  }
+
+  .faq {
+    border-top: 1px solid var(--stone-400);
+  }
+
+  .faq__item {
+    border-bottom: 1px solid var(--stone-400);
+  }
+
+  .faq__item summary {
+    position: relative;
+    padding: var(--space-m) 2.5rem var(--space-m) 0;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: var(--step-1);
+    line-height: 1.3;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__item summary::after {
+    content: '+';
+    position: absolute;
+    right: 0.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-sans);
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: var(--ochre-700);
+    transition: transform 0.2s var(--ease);
+  }
+
+  .faq__item[open] summary::after {
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  .faq__item p {
+    padding-bottom: var(--space-m);
+    max-width: 62ch;
+    color: var(--ink-2);
+  }
+
+  .contact-strip {
+    display: grid;
+    gap: var(--space-l);
+    align-items: end;
+  }
+
+  .contact-strip__list {
+    display: grid;
+    gap: var(--space-s);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .contact-strip__list li {
+    display: grid;
+    gap: 0.1rem;
+    padding: var(--space-s) var(--space-m);
+    border: 1px solid rgb(246 241 231 / 0.2);
+    border-radius: var(--radius);
+  }
+
+  .contact-strip__list span {
+    font-family: var(--font-sc);
+    font-weight: 700;
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    color: var(--on-dark-3);
+  }
+
+  .contact-strip__list a {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: var(--step-1);
+    color: var(--on-dark);
+  }
+
+  @media (min-width: 60em) {
+    .contact-strip {
+      grid-template-columns: 1fr minmax(18rem, 24rem);
+    }
+  }
+</style>

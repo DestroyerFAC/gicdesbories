@@ -1,0 +1,332 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import EventRow from '@/components/EventRow.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { site } from '@/config/site';
+import { agenda } from '@/data/agenda';
+import { AGENDA_CATEGORIES, groupByMonth, type AgendaCategory } from '@/lib/agenda';
+import { formatMonthYear, huntingSeasonOf } from '@/lib/dates';
+import { withBase } from '@/lib/url';
+
+const months = groupByMonth(agenda);
+const firstEvent = agenda[0];
+const season = firstEvent ? huntingSeasonOf(firstEvent.date) : site.firstSeason;
+const categories = Object.entries(AGENDA_CATEGORIES) as Array<[AgendaCategory, (typeof AGENDA_CATEGORIES)[AgendaCategory]]>;
+
+const icsUrl = new URL(withBase('/agenda.ics'), Astro.site).href;
+const webcalUrl = icsUrl.replace(/^https?:/, 'webcal:');
+---
+
+<BaseLayout
+  title="Agenda"
+  description={`Battues, chantiers et rendez-vous du G.I.C. des Bories pour la saison ${season}. Calendrier abonnable depuis votre téléphone.`}
+>
+  <PageHeader
+    eyebrow="Agenda"
+    title={`Saison ${season}`}
+    lead="Battues au grand gibier, journées d’entretien du territoire, assemblées et repas : toutes les dates du G.I.C."
+    seed={9}
+  />
+
+  <section class="section" aria-labelledby="dates-title" data-agenda>
+    <h2 id="dates-title" class="visually-hidden">Dates de la saison</h2>
+    <div class="container agenda">
+      <div class="agenda__filters">
+        <div class="agenda__panel" data-agenda-controls hidden>
+          <h2 class="agenda__panel-title">Afficher</h2>
+          <fieldset class="chips">
+            <legend class="visually-hidden">Type de date</legend>
+            <label class="chip">
+              <input type="radio" name="categorie" value="tout" checked />
+              <span>Tout</span>
+            </label>
+            {
+              categories.map(([key, meta]) => (
+                <label class="chip">
+                  <input type="radio" name="categorie" value={key} />
+                  <span>{meta.plural}</span>
+                </label>
+              ))
+            }
+          </fieldset>
+          <label class="toggle">
+            <input type="checkbox" data-show-past />
+            <span>Afficher les dates passées</span>
+          </label>
+          <p class="visually-hidden" role="status" data-agenda-status></p>
+        </div>
+      </div>
+
+      <div class="agenda__main">
+        {
+          months.map((month) => (
+            <section class="agenda__month" data-month aria-labelledby={`mois-${month.key}`}>
+              <h2 id={`mois-${month.key}`} class="agenda__month-title">
+                {formatMonthYear(month.firstDate)}
+              </h2>
+              <ul class="agenda__list" role="list">
+                {month.events.map((event) => (
+                  <EventRow event={event} />
+                ))}
+              </ul>
+            </section>
+          ))
+        }
+        <p class="agenda__empty" data-agenda-empty hidden={months.length > 0}>
+          Aucune date ne correspond pour le moment. Le calendrier de la prochaine saison sera publié après l’assemblée générale.
+        </p>
+        <p class="agenda__note muted">
+          Les battues peuvent être annulées selon la météo ou l’avancement du plan de chasse. En cas de doute,{' '}
+          <a href={withBase('/contact/')}>contactez le bureau</a>.
+        </p>
+      </div>
+
+      <aside class="agenda__extras" aria-label="Abonnement et légende">
+        <div class="agenda__panel">
+          <h2 class="agenda__panel-title">Dans votre téléphone</h2>
+          <p class="muted">Abonnez-vous : les dates s’ajoutent à votre agenda et se mettent à jour d’elles-mêmes.</p>
+          <div class="agenda__subscribe">
+            <a class="btn" href={webcalUrl}>S’abonner</a>
+            <a class="btn btn--stone" href={withBase('/agenda.ics')} download>Télécharger (.ics)</a>
+          </div>
+          <details class="agenda__help">
+            <summary>Google Agenda, Outlook…</summary>
+            <p>
+              Dans votre agenda, choisissez « Ajouter un agenda à partir d’une URL » (ou « S’abonner ») et collez cette adresse :
+            </p>
+            <code class="agenda__url">{icsUrl}</code>
+            <button class="btn btn--stone agenda__copy" type="button" data-copy={icsUrl} hidden>Copier l’adresse</button>
+          </details>
+        </div>
+
+        <ul class="agenda__legend" role="list">
+          {
+            categories.map(([key, meta]) => (
+              <li>
+                <span class:list={['tag', `tag--${key}`]}>{meta.label}</span>
+                <span>{meta.description}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { initAgendaFilter, initCopyButtons } from '@/scripts/agenda-filter';
+  initAgendaFilter();
+  initCopyButtons();
+</script>
+
+<style>
+  .agenda {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  /* Sans JavaScript, les filtres sont inutiles : on masque leur emplacement. */
+  .agenda__filters:has(> [data-agenda-controls][hidden]) {
+    display: none;
+  }
+
+  /* Mobile : filtres, puis les dates, puis l'abonnement. */
+  .agenda__extras {
+    display: grid;
+    gap: var(--space-m);
+    align-content: start;
+  }
+
+
+  @media (min-width: 60em) {
+    .agenda {
+      grid-template-columns: minmax(16rem, 21rem) minmax(0, 1fr);
+      grid-template-areas:
+        'filters main'
+        'extras main';
+      grid-template-rows: auto 1fr;
+      align-items: start;
+      column-gap: var(--space-2xl);
+      row-gap: var(--space-m);
+    }
+
+    .agenda__filters {
+      grid-area: filters;
+    }
+
+    .agenda__extras {
+      grid-area: extras;
+    }
+
+    .agenda__main {
+      grid-area: main;
+    }
+  }
+
+  .agenda__panel {
+    display: grid;
+    gap: var(--space-s);
+    padding: var(--space-m);
+    border: 1px solid var(--stone-300);
+    border-radius: var(--radius);
+    background: var(--paper-2);
+  }
+
+  .agenda__panel[hidden] {
+    display: none;
+  }
+
+  .agenda__panel-title {
+    font-family: var(--font-sc);
+    font-weight: 700;
+    font-size: var(--step-0);
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    color: var(--ochre-700);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .chip {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .chip span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.4rem;
+    padding: 0.3rem 0.85rem;
+    border: 1px solid var(--stone-500);
+    border-radius: 2px;
+    background: var(--paper);
+    font-weight: 500;
+  }
+
+  .chip input:checked + span {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 700;
+  }
+
+  .chip input:focus-visible + span {
+    outline: 3px solid var(--blaze-500);
+    outline-offset: 2px;
+  }
+
+  .toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+  }
+
+  .toggle input {
+    width: 1.15rem;
+    height: 1.15rem;
+    accent-color: var(--oak-800);
+  }
+
+  .agenda__subscribe {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .agenda__help summary {
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  .agenda__help p {
+    margin-block: 0.5rem;
+    font-size: 0.98rem;
+    color: var(--ink-2);
+  }
+
+  .agenda__url {
+    display: block;
+    padding: 0.5rem 0.6rem;
+    border-radius: 2px;
+    background: var(--paper);
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+    user-select: all;
+  }
+
+  .agenda__copy {
+    margin-top: 0.6rem;
+    min-height: 2.4rem;
+    font-size: 0.95rem;
+  }
+
+  .agenda__legend {
+    display: grid;
+    gap: 0.7rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.98rem;
+    color: var(--ink-2);
+  }
+
+  .agenda__legend li {
+    display: grid;
+    gap: 0.25rem;
+    justify-items: start;
+  }
+
+  .agenda__month + .agenda__month {
+    margin-top: var(--space-xl);
+  }
+
+  .agenda__month[hidden] {
+    display: none;
+  }
+
+  .agenda__month-title {
+    font-size: var(--step-2);
+    text-transform: capitalize;
+    margin-bottom: var(--space-xs);
+  }
+
+  .agenda__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-bottom: 1px solid var(--stone-300);
+  }
+
+  .agenda__list :global(.is-past) {
+    opacity: 0.55;
+  }
+
+  .agenda__empty {
+    padding: var(--space-l);
+    border: 1px dashed var(--stone-500);
+    border-radius: var(--radius);
+    text-align: center;
+  }
+
+  .agenda__note {
+    margin-top: var(--space-l);
+    font-size: 0.98rem;
+  }
+</style>

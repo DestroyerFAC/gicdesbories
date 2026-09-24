@@ -1,0 +1,66 @@
+---
+import { WALL_VARIANTS, type WallVariant } from '@/lib/walls';
+import { withBase } from '@/lib/url';
+
+/**
+ * Muret de pierres sèches (séparateur). `object-fit: cover` recadre
+ * l'image sans jamais déformer les pierres, quelle que soit la largeur.
+ */
+interface Props {
+  variant: WallVariant;
+  /** Décale le cadrage pour varier le motif d'une page à l'autre. */
+  position?: 'start' | 'center' | 'end';
+  eager?: boolean;
+  class?: string;
+}
+
+const { variant, position = 'center', eager = false, class: className } = Astro.props;
+const spec = WALL_VARIANTS[variant];
+---
+
+<img
+  class:list={['drystone', `drystone--${variant}`, `drystone--${position}`, className]}
+  src={withBase(`/art/muret-${variant}.svg`)}
+  alt=""
+  width={spec.width}
+  height={spec.height}
+  loading={eager ? 'eager' : 'lazy'}
+  decoding="async"
+/>
+
+<style>
+  .drystone {
+    display: block;
+    width: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: 50% 100%;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .drystone--start {
+    object-position: 0 100%;
+  }
+
+  .drystone--end {
+    object-position: 100% 100%;
+  }
+
+  /* Hauteurs = WALL_VARIANTS (src/lib/walls.ts). */
+  .drystone--footer {
+    height: 46px;
+  }
+
+  .drystone--hero {
+    height: 50px;
+  }
+
+  .drystone--band {
+    height: 28px;
+  }
+
+  .drystone--thin {
+    height: 16px;
+  }
+</style>

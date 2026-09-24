@@ -1,0 +1,209 @@
+---
+import LogoMark from './LogoMark.astro';
+import { site } from '@/config/site';
+
+const [a, b] = site.founders;
+const unified = ['un territoire', 'une carte de chasse', 'un bureau', 'un calendrier de battues'];
+---
+
+<figure class="fusion" aria-labelledby="fusion-caption">
+  <figcaption id="fusion-caption" class="visually-hidden">
+    Schéma de la fusion : la {a.name} ({a.home}) et la {b.name} ({b.home}) forment ensemble le {site.acronymExpanded}.
+  </figcaption>
+
+  <div class="fusion__founder fusion__founder--a">
+    <span class="fusion__swatch" aria-hidden="true"></span>
+    <span class="fusion__kicker">Société fondatrice</span>
+    <strong class="fusion__name">{a.name}</strong>
+    <span class="fusion__home">{a.home}</span>
+  </div>
+
+  <span class="fusion__plus" aria-hidden="true">+</span>
+
+  <div class="fusion__founder fusion__founder--b">
+    <span class="fusion__swatch" aria-hidden="true"></span>
+    <span class="fusion__kicker">Société fondatrice</span>
+    <strong class="fusion__name">{b.name}</strong>
+    <span class="fusion__home">{b.home}</span>
+  </div>
+
+  <svg class="fusion__links" viewBox="0 0 600 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path d="M135 0 C135 60 300 40 300 100" vector-effect="non-scaling-stroke"></path>
+    <path d="M465 0 C465 60 300 40 300 100" vector-effect="non-scaling-stroke"></path>
+  </svg>
+  <span class="fusion__arrow" aria-hidden="true">↓</span>
+
+  <div class="fusion__result">
+    <LogoMark size={64} />
+    <div>
+      <span class="fusion__kicker">Depuis {site.foundedYear}</span>
+      <strong class="fusion__gic">{site.acronymExpanded}</strong>
+      <ul class="fusion__unified" role="list">
+        {unified.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  </div>
+</figure>
+
+<style>
+  .fusion {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+    gap: var(--space-s);
+    margin: 0;
+  }
+
+  .fusion__founder {
+    position: relative;
+    display: grid;
+    gap: 0.2rem;
+    padding: var(--space-m) var(--space-m) var(--space-m) calc(var(--space-m) + 0.9rem);
+    border: 1px solid var(--stone-300);
+    border-radius: var(--radius);
+    background: var(--paper);
+  }
+
+  .fusion__swatch {
+    position: absolute;
+    inset-block: -1px;
+    inset-inline-start: -1px;
+    width: 0.55rem;
+    border-radius: var(--radius) 0 0 var(--radius);
+    background: #b07a3f;
+  }
+
+  .fusion__founder--b .fusion__swatch {
+    background: #7d8a5c;
+  }
+
+  .fusion__kicker {
+    font-family: var(--font-sc);
+    font-weight: 700;
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    color: var(--ink-3);
+  }
+
+  .fusion__name {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    line-height: 1.1;
+  }
+
+  .fusion__home {
+    color: var(--ink-2);
+  }
+
+  .fusion__plus,
+  .fusion__arrow {
+    justify-self: center;
+    font-family: var(--font-serif);
+    font-weight: 800;
+    font-size: var(--step-2);
+    line-height: 1;
+    color: var(--ochre-700);
+  }
+
+  .fusion__links {
+    display: none;
+  }
+
+  .fusion__result {
+    display: flex;
+    gap: var(--space-m);
+    align-items: center;
+    padding: var(--space-m) var(--space-l);
+    border-radius: var(--radius);
+    background: var(--oak-900);
+    color: var(--on-dark);
+    --logo-ink: var(--on-dark);
+    --logo-cut: var(--oak-900);
+    --logo-stone-a: #c89456;
+    --logo-stone-b: #98a672;
+  }
+
+  .fusion__result .fusion__kicker {
+    color: var(--blaze-300);
+  }
+
+  .fusion__gic {
+    display: block;
+    margin-block: 0.2rem 0.6rem;
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    line-height: 1.1;
+  }
+
+  .fusion__unified {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .fusion__unified li {
+    padding: 0.1rem 0.6rem 0.15rem;
+    border: 1px solid rgb(246 241 231 / 0.25);
+    border-radius: 2px;
+    font-size: 0.95rem;
+    color: var(--on-dark-2);
+  }
+
+  @media (max-width: 30em) {
+    .fusion__result {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: var(--space-m);
+    }
+  }
+
+  @media (min-width: 48em) {
+    .fusion {
+      grid-template-columns: 1fr auto 1fr;
+      grid-template-areas:
+        'a plus b'
+        'links links links'
+        'result result result';
+      column-gap: var(--space-l);
+      row-gap: 0;
+    }
+
+    .fusion__founder--a {
+      grid-area: a;
+    }
+
+    .fusion__founder--b {
+      grid-area: b;
+    }
+
+    .fusion__plus {
+      grid-area: plus;
+      align-self: center;
+    }
+
+    .fusion__arrow {
+      display: none;
+    }
+
+    .fusion__links {
+      grid-area: links;
+      display: block;
+      width: 100%;
+      height: 4.5rem;
+      fill: none;
+      stroke: var(--stone-500);
+      stroke-width: 2;
+      stroke-dasharray: 9 5;
+    }
+
+    .fusion__result {
+      grid-area: result;
+      justify-self: center;
+      max-width: 44rem;
+    }
+  }
+</style>

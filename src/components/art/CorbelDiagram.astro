@@ -1,0 +1,131 @@
+---
+import { buildCorbelSection } from '@/lib/corbel';
+
+const W = 440;
+const H = 330;
+const GROUND = 300;
+const section = buildCorbelSection(W / 2, GROUND, 12);
+const tones = ['#d3c19b', '#c7b28a', '#dccdaf', '#bea77f'];
+
+const legend = [
+  { title: 'Lauze de fermeture', text: 'Une grande pierre plate coiffe le sommet et ferme la voûte.' },
+  { title: 'Encorbellement', text: 'Chaque assise déborde un peu vers l’intérieur de celle du dessous, jusqu’à se refermer.' },
+  { title: 'Pendage', text: 'Les pierres penchent légèrement vers l’extérieur : la pluie ruisselle dehors, jamais dedans.' },
+  { title: 'Murs épais', text: 'À la base, le mur est très large : son poids contrebute la poussée de la voûte.' },
+];
+
+const markers = [
+  { n: 1, at: section.anchors.capstone, dx: 70, dy: -14 },
+  { n: 2, at: section.anchors.overhang, dx: 58, dy: 18 },
+  { n: 3, at: section.anchors.tilt, dx: 30, dy: -34 },
+  { n: 4, at: section.anchors.base, dx: -60, dy: -42 },
+];
+---
+
+<figure class="corbel">
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="corbel-title" focusable="false">
+    <title id="corbel-title">Coupe d’une borie : assises de pierres en encorbellement fermées par une lauze.</title>
+    <rect x="0" y={GROUND} width={W} height={H - GROUND} fill="#cdb98f"></rect>
+    <path d={section.interior} fill="#e6dac3"></path>
+    {section.stones.map((d, i) => <path d={d} fill={tones[i % tones.length]} stroke="#8c7757" stroke-width="0.8" />)}
+    <path d={section.capstone} fill="#b9a680" stroke="#8c7757" stroke-width="0.8"></path>
+    {
+      markers.map((m) => (
+        <g class="corbel__marker">
+          <line x1={m.at.x} y1={m.at.y} x2={m.at.x + m.dx} y2={m.at.y + m.dy} />
+          <circle cx={m.at.x} cy={m.at.y} r="3" />
+          <circle cx={m.at.x + m.dx} cy={m.at.y + m.dy} r="11" class="corbel__badge" />
+          <text x={m.at.x + m.dx} y={m.at.y + m.dy + 4.5} text-anchor="middle">
+            {m.n}
+          </text>
+        </g>
+      ))
+    }
+  </svg>
+  <figcaption>
+    <ol class="corbel__legend" role="list">
+      {
+        legend.map((item, index) => (
+          <li>
+            <span class="corbel__num" aria-hidden="true">
+              {index + 1}
+            </span>
+            <span>
+              <strong>{item.title}.</strong> {item.text}
+            </span>
+          </li>
+        ))
+      }
+    </ol>
+  </figcaption>
+</figure>
+
+<style>
+  .corbel {
+    display: grid;
+    gap: var(--space-m);
+    margin: 0;
+    padding: var(--space-m);
+    border: 1px solid var(--stone-300);
+    border-radius: var(--radius);
+    background: var(--paper);
+  }
+
+  .corbel svg {
+    width: 100%;
+    height: auto;
+  }
+
+  .corbel__marker line {
+    stroke: var(--ink);
+    stroke-width: 1.2;
+  }
+
+  .corbel__marker circle {
+    fill: var(--ink);
+  }
+
+  .corbel__marker .corbel__badge {
+    fill: var(--blaze-600);
+  }
+
+  .corbel__marker text {
+    fill: #fff;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .corbel__legend {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 1rem;
+  }
+
+  .corbel__legend li {
+    display: grid;
+    grid-template-columns: 1.6rem 1fr;
+    gap: 0.6rem;
+    align-items: start;
+    color: var(--ink-2);
+  }
+
+  .corbel__num {
+    display: inline-grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: var(--blaze-600);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  .corbel__legend strong {
+    color: var(--ink);
+  }
+</style>

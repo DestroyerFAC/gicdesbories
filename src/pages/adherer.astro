@@ -1,0 +1,192 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { site } from '@/config/site';
+import { PRICE_PENDING_LABEL, membershipCards, membershipSteps } from '@/data/adhesion';
+import { withBase } from '@/lib/url';
+
+const euro = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+const documents = [
+  'Le bulletin d’adhésion complété et signé',
+  'Une copie du permis de chasser et de sa validation pour la saison',
+  'L’attestation d’assurance chasse en cours de validité',
+  'Le règlement de la cotisation',
+];
+---
+
+<BaseLayout
+  title="Adhérer"
+  description={`Rejoindre le G.I.C. des Bories pour la saison ${site.firstSeason} : cartes de chasse, démarches, documents à fournir.`}
+>
+  <PageHeader
+    eyebrow="Adhérer"
+    title="Une carte, tout le territoire"
+    lead={`Pour la saison ${site.firstSeason}, une seule adhésion donne accès à l’ensemble du territoire du G.I.C., de Saint-Jory-las-Bloux à Corgnac-sur-l’Isle.`}
+    seed={3}
+  />
+
+  <section class="section" aria-labelledby="anciens-title">
+    <div class="container">
+      <div class="former">
+        <p class="eyebrow">Anciens adhérents</p>
+        <h2 id="anciens-title">Vous étiez à la {site.founders[0].shortName} ou à {site.founders[1].shortName} ?</h2>
+        <p>
+          Les deux sociétés ayant fusionné, votre adhésion se fait désormais au G.I.C. des Bories. Même démarche, même dossier, mais une carte
+          valable sur l’ensemble du territoire commun. Pour renouveler votre carte ou en cas de doute, écrivez simplement au bureau.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sand" aria-labelledby="cartes-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Les cartes</p>
+        <h2 id="cartes-title">Quelle carte pour vous ?</h2>
+        <p class="muted">Les tarifs sont votés chaque année en assemblée générale.</p>
+      </div>
+      <ul class="cards" role="list">
+        {
+          membershipCards.map((card) => (
+            <li class="membership">
+              <h3>{card.name}</h3>
+              <p class="membership__audience">{card.audience}</p>
+              <ul class="check-list" role="list">
+                {card.details.map((detail) => (
+                  <li>{detail}</li>
+                ))}
+              </ul>
+              <p class="membership__price">
+                {card.price === null ? <span class="membership__pending">{PRICE_PENDING_LABEL}</span> : euro.format(card.price)}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="etapes-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Démarches</p>
+        <h2 id="etapes-title">Adhérer en quatre étapes</h2>
+      </div>
+      <ol class="numbered" role="list">
+        {
+          membershipSteps.map((step) => (
+            <li>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--sand" aria-labelledby="dossier-title">
+    <div class="container split split--top">
+      <div class="split__text stack">
+        <p class="eyebrow">Le dossier</p>
+        <h2 id="dossier-title">Les pièces à fournir</h2>
+        <ul class="check-list" role="list">
+          {documents.map((doc) => <li>{doc}</li>)}
+        </ul>
+      </div>
+      <div class="card owners">
+        <h3>Propriétaires fonciers</h3>
+        <p>
+          Vous possédez des bois, des landes ou des prairies sur l’une des deux communes ? En confiant votre droit de chasse au G.I.C., vous
+          participez à la gestion du gibier sur un territoire cohérent, et vous bénéficiez d’un interlocuteur unique en cas de dégâts.
+        </p>
+        <p>
+          <a class="link-arrow" href={withBase('/contact/?objet=territoire')}>Confier un terrain</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Prochaine étape"
+    title="Demander son adhésion"
+    text="Écrivez au bureau : nous vous envoyons le bulletin d’adhésion et le règlement intérieur."
+    primary={{ href: '/contact/?objet=adhesion', label: 'Demander le bulletin' }}
+    secondary={{ href: '/chasse/', label: 'Les règles de chasse' }}
+  />
+</BaseLayout>
+
+<style>
+  .former {
+    display: grid;
+    gap: var(--space-s);
+    max-width: 48rem;
+    padding: var(--space-l);
+    border-inline-start: 4px solid var(--blaze-500);
+    background: var(--paper-2);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+
+  .former h2 {
+    font-size: var(--step-2);
+  }
+
+  .former p:last-child {
+    color: var(--ink-2);
+  }
+
+  .cards {
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .membership {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: var(--space-s);
+    padding: var(--space-m);
+    border: 1px solid var(--stone-300);
+    border-radius: var(--radius);
+    background: #f9f5ec;
+    box-shadow: inset 0 -4px 0 var(--stone-300);
+  }
+
+  .membership h3 {
+    font-size: var(--step-2);
+  }
+
+  .membership__audience {
+    color: var(--ink-2);
+  }
+
+  .membership .check-list {
+    align-content: start;
+    font-size: 1rem;
+  }
+
+  .membership__price {
+    padding-top: var(--space-s);
+    border-top: 1px dashed var(--stone-400);
+    font-family: var(--font-serif);
+    font-weight: 800;
+    font-size: var(--step-2);
+  }
+
+  .membership__pending {
+    display: block;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.98rem;
+    color: var(--ink-3);
+  }
+
+  .owners {
+    align-self: start;
+  }
+</style>

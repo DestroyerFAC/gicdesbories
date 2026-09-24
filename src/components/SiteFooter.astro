@@ -1,0 +1,178 @@
+---
+import DryStoneWall from './DryStoneWall.astro';
+import LogoMark from './LogoMark.astro';
+import { mainNav, secondaryNav, site } from '@/config/site';
+import { withBase } from '@/lib/url';
+
+const year = new Date().getFullYear();
+const communes = site.communes.map((commune) => commune.name).join(' et ');
+---
+
+<footer class="site-footer">
+  <DryStoneWall variant="footer" />
+  <div class="site-footer__body">
+    <div class="container site-footer__grid">
+      <div class="site-footer__brand">
+        <a class="site-footer__logo" href={withBase('/')}>
+          <LogoMark size={52} />
+          <span>
+            <strong>{site.acronymExpanded}</strong>
+          </span>
+        </a>
+        <p>
+          Né en {site.foundedYear} de l’union de la {site.founders[0].name} et de la {site.founders[1].name}, sur les communes de{' '}
+          {communes} ({site.department}).
+        </p>
+        <p class="site-footer__motto">« {site.motto} »</p>
+      </div>
+
+      <nav aria-label="Plan du site" class="site-footer__col">
+        <h2 class="site-footer__title">Le site</h2>
+        <ul role="list">
+          <li><a href={withBase('/')}>Accueil</a></li>
+          {
+            [...mainNav, ...secondaryNav].map((item) => (
+              <li>
+                <a href={withBase(item.href)}>{item.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="site-footer__col">
+        <h2 class="site-footer__title">Nous joindre</h2>
+        <ul role="list">
+          <li>
+            <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+          </li>
+          {
+            site.contact.safetyPhone && (
+              <li>
+                Sécurité, jours de battue :{' '}
+                <a href={`tel:${site.contact.safetyPhone.replace(/\s/g, '')}`}>{site.contact.safetyPhone}</a>
+              </li>
+            )
+          }
+          {site.contact.postalAddress && <li>{site.contact.postalAddress.join(', ')}</li>}
+          <li>
+            <a href={withBase('/agenda.ics')}>S’abonner à l’agenda (.ics)</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="site-footer__col">
+        <h2 class="site-footer__title">Liens utiles</h2>
+        <ul role="list">
+          {
+            site.links.map((link) => (
+              <li>
+                <a href={link.href} rel="noopener noreferrer external" target="_blank">
+                  {link.label}
+                  <span class="visually-hidden"> (nouvel onglet)</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="container site-footer__bottom">
+      <p>© {year} {site.name}. {site.legal.status}.</p>
+      <p>Illustrations originales, dessinées pierre à pierre. Aucun cookie, aucun traceur.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: auto;
+    --logo-ink: var(--on-dark);
+    --logo-cut: var(--oak-900);
+    --logo-stone-a: #c89456;
+    --logo-stone-b: #98a672;
+  }
+
+  .site-footer__body {
+    background: var(--oak-900);
+    color: var(--on-dark-2);
+    padding-block: var(--space-xl) var(--space-l);
+    font-size: 1rem;
+  }
+
+  .site-footer__grid {
+    display: grid;
+    gap: var(--space-l);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  }
+
+  @media (min-width: 60em) {
+    .site-footer__grid {
+      grid-template-columns: 1.6fr 1fr 1.1fr 1.2fr;
+    }
+  }
+
+  .site-footer__brand {
+    display: grid;
+    gap: var(--space-s);
+    align-content: start;
+    max-width: 30rem;
+  }
+
+  .site-footer__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: var(--on-dark);
+    text-decoration: none;
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    line-height: 1.15;
+  }
+
+  .site-footer__motto {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--on-dark);
+  }
+
+  .site-footer__title {
+    font-family: var(--font-sc);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.09em;
+    text-transform: lowercase;
+    color: var(--blaze-300);
+    margin-bottom: var(--space-xs);
+  }
+
+  .site-footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .site-footer a {
+    color: var(--on-dark);
+    overflow-wrap: anywhere;
+  }
+
+  .site-footer a:hover {
+    color: var(--blaze-300);
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-xs) var(--space-l);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-m);
+    border-top: 1px solid rgb(246 241 231 / 0.15);
+    font-size: 0.92rem;
+    color: var(--on-dark-3);
+  }
+</style>
