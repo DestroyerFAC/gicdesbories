@@ -20,7 +20,7 @@ Se regrouper, c’est :
 
 ## Ce qui change pour les adhérents
 
-Une seule carte, valable sur l’ensemble du territoire. Un seul bureau, où les deux anciennes sociétés sont représentées. Un calendrier de battues commun, publié sur ce site et abonnable depuis un téléphone.
+Une seule carte, valable sur l’ensemble du territoire. Un seul bureau, où les deux anciennes sociétés sont représentées. Un calendrier de battues commun, publié sur ce site.
 
 ## Pourquoi « des Bories » ?
 

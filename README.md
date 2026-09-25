@@ -32,8 +32,7 @@ npm run verify    # types + tests + build (à lancer avant chaque livraison)
 | `/territoire/`        | Les deux communes, les milieux, les bories (schéma d’encorbellement)     |
 | `/chasse/`            | Modes de chasse, six règles de sécurité, déroulé d’une battue, espèces   |
 | `/promeneurs/`        | Reconnaître une battue, bons réflexes, prochaines battues, FAQ           |
-| `/agenda/`            | Agenda filtrable de la saison + abonnement au calendrier                 |
-| `/agenda.ics`         | Calendrier iCalendar abonnable (Google Agenda, Apple, Outlook)           |
+| `/agenda/`            | Agenda filtrable de la saison                                            |
 | `/actualites/`        | Articles (Markdown)                                                      |
 | `/adherer/`           | Cartes, démarches, pièces à fournir                                      |
 | `/contact/`           | Formulaire (ouvre la messagerie du visiteur), dégâts de gibier, urgence  |
@@ -112,12 +111,12 @@ src/
 ├── config/site.ts          Identité, contacts, navigation
 ├── data/                   Agenda, adhésion, chasse (données typées)
 ├── content/actualites/     Articles Markdown
-├── lib/                    Logique pure et testée : dates, agenda, iCalendar,
+├── lib/                    Logique pure et testée : dates, agenda,
 │                           formulaire, typographie, générateurs de bories et murets
 ├── components/             En-tête, pied de page, schéma de fusion, cartes…
 │   └── art/                Illustrations : paysage, borie, vignette, coupe, panneau
 ├── layouts/BaseLayout.astro
-├── pages/                  Une page par fichier + agenda.ics, robots.txt, murets SVG
+├── pages/                  Une page par fichier + robots.txt, murets SVG
 ├── scripts/                Scripts navigateur (amélioration progressive)
 └── styles/global.css       Palette, typographie, composants de base
 integrations/               Intégration Astro (typographie française)

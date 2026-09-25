@@ -21,7 +21,7 @@ export const AGENDA_CATEGORIES = {
 export type AgendaCategory = keyof typeof AGENDA_CATEGORIES;
 
 export interface AgendaEvent {
-  /** Identifiant stable (sert d'UID dans le calendrier .ics). */
+  /** Identifiant stable et unique. */
   readonly id: string;
   readonly date: IsoDate;
   readonly endDate?: IsoDate;
