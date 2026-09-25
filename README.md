@@ -75,13 +75,13 @@ Texte de l’article en Markdown.
 
 Le site a été rédigé sans documents internes du G.I.C. Les éléments suivants sont **des exemples réalistes à confirmer ou corriger** :
 
-- [ ] **Adresse e-mail** `contact@gic-des-bories.fr` (`src/config/site.ts`) : à remplacer par une adresse réelle et relevée.
-- [ ] **Téléphone sécurité** des jours de battue (`safetyPhone`, facultatif) et **adresse postale** du siège.
-- [ ] **Dates de l’agenda** 2026-2027 (`src/data/agenda.ts`) : battues, chantiers, réunion d’accueil, repas, AG.
-- [ ] **Cartes de chasse** et conditions (`src/data/adhesion.ts`) ; tarifs laissés à « voté en AG ».
-- [ ] **Règles internes** : six règles de sécurité, déroulé de battue, espèces et modes de chasse (`src/data/chasse.ts`).
-- [ ] **Dates des trois articles** de lancement et leur contenu (`src/content/actualites/`).
-- [ ] **Mentions légales** : numéro RNA, directeur ou directrice de la publication.
+- [x] **Adresse e-mail** : `gicdesbories@gmail.com`.
+- [x] **Directeur de la publication** : Anthony B., président.
+- [ ] **Dates de l’agenda** 2026-2027 (`src/data/agenda.ts`) : prévisionnelles, calées sur le dimanche ; pas de repas cette saison, AG prévue la saison prochaine.
+- [ ] **Composition du bureau** (`bureau` dans `src/config/site.ts`) : à communiquer.
+- [ ] **Numéro RNA** : en cours d’attribution (association en cours de création).
+- [ ] **Téléphone sécurité** des jours de battue (`safetyPhone`, facultatif).
+- [ ] **Règles internes** et cartes de chasse (`src/data/chasse.ts`, `src/data/adhesion.ts`) ; tarifs inchangés.
 
 Une fois ces points validés, passer `preview.enabled` à `false` dans `src/config/site.ts` pour retirer le bandeau « Site en cours de mise en service ».
 

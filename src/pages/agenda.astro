@@ -24,7 +24,7 @@ const webcalUrl = icsUrl.replace(/^https?:/, 'webcal:');
   <PageHeader
     eyebrow="Agenda"
     title={`Saison ${season}`}
-    lead="Battues au grand gibier, journées d’entretien du territoire, assemblées et repas : toutes les dates du G.I.C."
+    lead="Battues au grand gibier, le plus souvent le dimanche, journées d’entretien du territoire et réunions : toutes les dates du G.I.C."
     seed={9}
   />
 
@@ -73,7 +73,7 @@ const webcalUrl = icsUrl.replace(/^https?:/, 'webcal:');
           ))
         }
         <p class="agenda__empty" data-agenda-empty hidden={months.length > 0}>
-          Aucune date ne correspond pour le moment. Le calendrier de la prochaine saison sera publié après l’assemblée générale.
+          Aucune date ne correspond pour le moment. Le calendrier de la prochaine saison sera publié ici.
         </p>
         <p class="agenda__note muted">
           Les battues peuvent être annulées selon la météo ou l’avancement du plan de chasse. En cas de doute,{' '}

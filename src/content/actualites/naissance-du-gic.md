@@ -5,7 +5,7 @@ date: 2026-09-05
 category: association
 ---
 
-C’est fait : la **SCC Saint-Jory** et la **Chasse de Leymeronie** ne forment plus qu’une seule association, le **Groupement Intercommunal de Chasse des Bories**. Le nouveau groupement couvre les territoires que chacune des deux sociétés gérait jusqu’ici, à cheval sur Saint-Jory-las-Bloux et Corgnac-sur-l’Isle.
+C’est décidé : la **SCC Saint-Jory** et la **Chasse de Leymeronie** se regroupent en une seule association, le **Groupement Intercommunal de Chasse des Bories**. Les démarches administratives de création sont en cours. Le nouveau groupement couvrira les territoires que chacune des deux sociétés gérait jusqu’ici, à cheval sur Saint-Jory-las-Bloux et Corgnac-sur-l’Isle.
 
 ## Pourquoi se regrouper ?
 
