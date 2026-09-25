@@ -1,6 +1,6 @@
 ---
 title: "« Chasse en cours » : comment nos battues sont signalées"
-description: Panneaux, horaires, secteurs, abonnement au calendrier. Tout ce qu’un promeneur ou un riverain doit savoir pour croiser une battue en toute sérénité.
+description: Panneaux, horaires, secteurs, agenda en ligne. Tout ce qu’un promeneur ou un riverain doit savoir pour croiser une battue en toute sérénité.
 date: 2026-09-15
 category: securite
 ---
@@ -13,7 +13,7 @@ Le matin de chaque battue, avant le premier poste, des panneaux triangulaires **
 
 ## Des dates publiées à l’avance
 
-Toutes les battues prévues figurent dans l’[agenda](../../agenda/), avec le secteur concerné et les horaires habituels. Vous pouvez **abonner votre téléphone** au calendrier du G.I.C. : les dates s’ajoutent et se mettent à jour toutes seules.
+Toutes les battues prévues figurent dans l’[agenda](../../agenda/), avec le secteur concerné et les horaires habituels.
 
 ## Des chasseurs visibles
 

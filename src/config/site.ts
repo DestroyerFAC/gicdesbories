@@ -116,14 +116,14 @@ export const site: SiteConfig = {
     },
   ],
   contact: {
-    email: 'contact@gic-des-bories.fr',
+    email: 'gicdesbories@gmail.com',
   },
   // Laisser vide tant que le bureau n'a pas validé sa publication :
   // la page « Le G.I.C. » masque alors automatiquement la liste nominative.
   bureau: [],
   legal: {
     status: 'Association régie par la loi du 1er juillet 1901',
-    publicationDirector: 'Le président ou la présidente du G.I.C. des Bories',
+    publicationDirector: 'Anthony B., président du G.I.C. des Bories',
     host: {
       name: 'GitHub, Inc. (GitHub Pages)',
       address: '88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis',
@@ -132,7 +132,7 @@ export const site: SiteConfig = {
   },
   preview: {
     enabled: true,
-    message: 'Site en cours de mise en service : dates, tarifs et contacts sont donnés à titre indicatif, à confirmer auprès du bureau.',
+    message: 'Association en cours de création : les dates indiquées sont prévisionnelles, à confirmer auprès du bureau.',
   },
   links: [
     {
