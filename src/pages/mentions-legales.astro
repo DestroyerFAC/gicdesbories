@@ -13,7 +13,7 @@ import { site } from '@/config/site';
       <p>
         <strong>{site.acronymExpanded}</strong> ({site.name})<br />
         {site.legal.status}.<br />
-        {site.legal.rna && <>Numéro RNA : {site.legal.rna}<br /></>}
+        Numéro RNA : {site.legal.rna ?? 'en cours d’attribution (association en cours de création)'}<br />
         {site.contact.postalAddress && <>{site.contact.postalAddress.join(', ')}<br /></>}
         Contact : <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
       </p>

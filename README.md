@@ -32,8 +32,7 @@ npm run verify    # types + tests + build (à lancer avant chaque livraison)
 | `/territoire/`        | Les deux communes, les milieux, les bories (schéma d’encorbellement)     |
 | `/chasse/`            | Modes de chasse, six règles de sécurité, déroulé d’une battue, espèces   |
 | `/promeneurs/`        | Reconnaître une battue, bons réflexes, prochaines battues, FAQ           |
-| `/agenda/`            | Agenda filtrable de la saison + abonnement au calendrier                 |
-| `/agenda.ics`         | Calendrier iCalendar abonnable (Google Agenda, Apple, Outlook)           |
+| `/agenda/`            | Agenda filtrable de la saison                                            |
 | `/actualites/`        | Articles (Markdown)                                                      |
 | `/adherer/`           | Cartes, démarches, pièces à fournir                                      |
 | `/contact/`           | Formulaire (ouvre la messagerie du visiteur), dégâts de gibier, urgence  |
@@ -75,13 +74,13 @@ Texte de l’article en Markdown.
 
 Le site a été rédigé sans documents internes du G.I.C. Les éléments suivants sont **des exemples réalistes à confirmer ou corriger** :
 
-- [ ] **Adresse e-mail** `contact@gic-des-bories.fr` (`src/config/site.ts`) : à remplacer par une adresse réelle et relevée.
-- [ ] **Téléphone sécurité** des jours de battue (`safetyPhone`, facultatif) et **adresse postale** du siège.
-- [ ] **Dates de l’agenda** 2026-2027 (`src/data/agenda.ts`) : battues, chantiers, réunion d’accueil, repas, AG.
-- [ ] **Cartes de chasse** et conditions (`src/data/adhesion.ts`) ; tarifs laissés à « voté en AG ».
-- [ ] **Règles internes** : six règles de sécurité, déroulé de battue, espèces et modes de chasse (`src/data/chasse.ts`).
-- [ ] **Dates des trois articles** de lancement et leur contenu (`src/content/actualites/`).
-- [ ] **Mentions légales** : numéro RNA, directeur ou directrice de la publication.
+- [x] **Adresse e-mail** : `gicdesbories@gmail.com`.
+- [x] **Directeur de la publication** : Anthony B., président.
+- [ ] **Dates de l’agenda** 2026-2027 (`src/data/agenda.ts`) : prévisionnelles, calées sur le dimanche ; pas de repas cette saison, AG prévue la saison prochaine.
+- [ ] **Composition du bureau** (`bureau` dans `src/config/site.ts`) : à communiquer.
+- [ ] **Numéro RNA** : en cours d’attribution (association en cours de création).
+- [ ] **Téléphone sécurité** des jours de battue (`safetyPhone`, facultatif).
+- [ ] **Règles internes** et cartes de chasse (`src/data/chasse.ts`, `src/data/adhesion.ts`) ; tarifs inchangés.
 
 Une fois ces points validés, passer `preview.enabled` à `false` dans `src/config/site.ts` pour retirer le bandeau « Site en cours de mise en service ».
 
@@ -112,12 +111,12 @@ src/
 ├── config/site.ts          Identité, contacts, navigation
 ├── data/                   Agenda, adhésion, chasse (données typées)
 ├── content/actualites/     Articles Markdown
-├── lib/                    Logique pure et testée : dates, agenda, iCalendar,
+├── lib/                    Logique pure et testée : dates, agenda,
 │                           formulaire, typographie, générateurs de bories et murets
 ├── components/             En-tête, pied de page, schéma de fusion, cartes…
 │   └── art/                Illustrations : paysage, borie, vignette, coupe, panneau
 ├── layouts/BaseLayout.astro
-├── pages/                  Une page par fichier + agenda.ics, robots.txt, murets SVG
+├── pages/                  Une page par fichier + robots.txt, murets SVG
 ├── scripts/                Scripts navigateur (amélioration progressive)
 └── styles/global.css       Palette, typographie, composants de base
 integrations/               Intégration Astro (typographie française)

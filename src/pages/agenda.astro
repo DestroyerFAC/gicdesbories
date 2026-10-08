@@ -13,18 +13,16 @@ const firstEvent = agenda[0];
 const season = firstEvent ? huntingSeasonOf(firstEvent.date) : site.firstSeason;
 const categories = Object.entries(AGENDA_CATEGORIES) as Array<[AgendaCategory, (typeof AGENDA_CATEGORIES)[AgendaCategory]]>;
 
-const icsUrl = new URL(withBase('/agenda.ics'), Astro.site).href;
-const webcalUrl = icsUrl.replace(/^https?:/, 'webcal:');
 ---
 
 <BaseLayout
   title="Agenda"
-  description={`Battues, chantiers et rendez-vous du G.I.C. des Bories pour la saison ${season}. Calendrier abonnable depuis votre téléphone.`}
+  description={`Battues, chantiers et rendez-vous du G.I.C. des Bories pour la saison ${season}.`}
 >
   <PageHeader
     eyebrow="Agenda"
     title={`Saison ${season}`}
-    lead="Battues au grand gibier, journées d’entretien du territoire, assemblées et repas : toutes les dates du G.I.C."
+    lead="Battues au grand gibier, le plus souvent le dimanche, journées d’entretien du territoire et réunions : toutes les dates du G.I.C."
     seed={9}
   />
 
@@ -73,7 +71,7 @@ const webcalUrl = icsUrl.replace(/^https?:/, 'webcal:');
           ))
         }
         <p class="agenda__empty" data-agenda-empty hidden={months.length > 0}>
-          Aucune date ne correspond pour le moment. Le calendrier de la prochaine saison sera publié après l’assemblée générale.
+          Aucune date ne correspond pour le moment. Le calendrier de la prochaine saison sera publié ici.
         </p>
         <p class="agenda__note muted">
           Les battues peuvent être annulées selon la météo ou l’avancement du plan de chasse. En cas de doute,{' '}
@@ -81,24 +79,7 @@ const webcalUrl = icsUrl.replace(/^https?:/, 'webcal:');
         </p>
       </div>
 
-      <aside class="agenda__extras" aria-label="Abonnement et légende">
-        <div class="agenda__panel">
-          <h2 class="agenda__panel-title">Dans votre téléphone</h2>
-          <p class="muted">Abonnez-vous : les dates s’ajoutent à votre agenda et se mettent à jour d’elles-mêmes.</p>
-          <div class="agenda__subscribe">
-            <a class="btn" href={webcalUrl}>S’abonner</a>
-            <a class="btn btn--stone" href={withBase('/agenda.ics')} download>Télécharger (.ics)</a>
-          </div>
-          <details class="agenda__help">
-            <summary>Google Agenda, Outlook…</summary>
-            <p>
-              Dans votre agenda, choisissez « Ajouter un agenda à partir d’une URL » (ou « S’abonner ») et collez cette adresse :
-            </p>
-            <code class="agenda__url">{icsUrl}</code>
-            <button class="btn btn--stone agenda__copy" type="button" data-copy={icsUrl} hidden>Copier l’adresse</button>
-          </details>
-        </div>
-
+      <aside class="agenda__extras" aria-label="Légende">
         <ul class="agenda__legend" role="list">
           {
             categories.map(([key, meta]) => (
@@ -115,9 +96,8 @@ const webcalUrl = icsUrl.replace(/^https?:/, 'webcal:');
 </BaseLayout>
 
 <script>
-  import { initAgendaFilter, initCopyButtons } from '@/scripts/agenda-filter';
+  import { initAgendaFilter } from '@/scripts/agenda-filter';
   initAgendaFilter();
-  initCopyButtons();
 </script>
 
 <style>
@@ -131,7 +111,7 @@ const webcalUrl = icsUrl.replace(/^https?:/, 'webcal:');
     display: none;
   }
 
-  /* Mobile : filtres, puis les dates, puis l'abonnement. */
+  /* Mobile : filtres, puis les dates, puis la légende. */
   .agenda__extras {
     display: grid;
     gap: var(--space-m);
@@ -244,38 +224,7 @@ const webcalUrl = icsUrl.replace(/^https?:/, 'webcal:');
     accent-color: var(--oak-800);
   }
 
-  .agenda__subscribe {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-xs);
-  }
 
-  .agenda__help summary {
-    cursor: pointer;
-    font-weight: 700;
-  }
-
-  .agenda__help p {
-    margin-block: 0.5rem;
-    font-size: 0.98rem;
-    color: var(--ink-2);
-  }
-
-  .agenda__url {
-    display: block;
-    padding: 0.5rem 0.6rem;
-    border-radius: 2px;
-    background: var(--paper);
-    font-size: 0.85rem;
-    overflow-wrap: anywhere;
-    user-select: all;
-  }
-
-  .agenda__copy {
-    margin-top: 0.6rem;
-    min-height: 2.4rem;
-    font-size: 0.95rem;
-  }
 
   .agenda__legend {
     display: grid;

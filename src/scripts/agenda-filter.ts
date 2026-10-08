@@ -58,24 +58,3 @@ export function initAgendaFilter(): void {
   root.addEventListener('change', apply);
   apply();
 }
-
-/** Bouton « Copier l'adresse » du calendrier. */
-export function initCopyButtons(): void {
-  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
-    const value = button.dataset['copy'];
-    if (!value || !navigator.clipboard) continue;
-    button.hidden = false;
-    const label = button.textContent ?? '';
-    button.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(value);
-        button.textContent = 'Adresse copiée';
-      } catch {
-        button.textContent = 'Copie impossible : sélectionnez l’adresse';
-      }
-      window.setTimeout(() => {
-        button.textContent = label;
-      }, 2500);
-    });
-  }
-}

@@ -3,11 +3,11 @@ export interface MembershipCard {
   readonly name: string;
   readonly audience: string;
   readonly details: readonly string[];
-  /** Montant en euros ; `null` tant qu'il n'a pas été voté en assemblée générale. */
+  /** Montant en euros ; `null` = tarif inchangé, communiqué par le bureau. */
   readonly price: number | null;
 }
 
-export const PRICE_PENDING_LABEL = 'Tarif voté en assemblée générale';
+export const PRICE_PENDING_LABEL = 'Tarif inchangé : le bureau vous le communique';
 
 /** ⚠️ Catégories et tarifs à valider par le bureau. */
 export const membershipCards: readonly MembershipCard[] = [

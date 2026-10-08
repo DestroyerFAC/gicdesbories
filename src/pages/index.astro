@@ -155,11 +155,10 @@ const audiences = [
         <p class="eyebrow">Agenda</p>
         <h2 id="agenda-title">Les prochaines dates</h2>
         <p class="muted">
-          Battues, chantiers et rendez-vous du G.I.C. Abonnez votre téléphone au calendrier pour ne rien manquer.
+          Battues, chantiers et rendez-vous du G.I.C., mis à jour au fil de la saison.
         </p>
         <div class="agenda-preview__actions">
           <a class="btn" href={withBase('/agenda/')}>Tout l’agenda</a>
-          <a class="btn btn--stone" href={withBase('/agenda.ics')}>S’abonner (.ics)</a>
         </div>
       </div>
       <div>
@@ -167,7 +166,7 @@ const audiences = [
           {upcoming.map((event, index) => <EventRow event={event} compact hidden={index >= HOME_EVENTS} />)}
         </ul>
         <p class="agenda-preview__empty muted" data-agenda-empty hidden={upcoming.length > 0}>
-          Aucune date programmée pour le moment. Le calendrier de la prochaine saison sera publié après l’assemblée générale.
+          Aucune date programmée pour le moment. Le calendrier de la prochaine saison sera publié ici.
         </p>
       </div>
     </div>
